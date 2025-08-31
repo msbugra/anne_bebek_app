@@ -37,6 +37,14 @@ Modern, kapsamlı bir anne-bebek gelişim takip uygulaması. Flutter ile gelişt
 - **SQL Injection Koruması**: Güvenli veritabanı işlemleri
 - **Input Validation**: Güvenli veri girişi kontrolü
 
+### 🛡️ Hata Yönetimi
+- **Gelişmiş Hata Türleri**: Ağ, veritabanı, doğrulama, sunucu, zaman aşımı ve önbellek hataları
+- **Üretim Hata Raporlama**: Firebase Crashlytics entegrasyonu
+- **Kapsamlı Hata Loglama**: Geliştirme ve üretim ortamları için ayrı loglama
+- **Hata Simülasyonu**: Test için mock repository'ler
+- **Yeniden Deneme Mekanizması**: Otomatik yeniden deneme özelliği
+- **Ağ Bağlantısı Kontrolü**: Gelişmiş bağlantı durumu izleme
+
 ## 🚀 Kurulum
 
 ### Gereksinimler
@@ -58,7 +66,10 @@ Modern, kapsamlı bir anne-bebek gelişim takip uygulaması. Flutter ile gelişt
    flutter pub get
    ```
 
-3. **Uygulamayı Çalıştırın**
+3. **Firebase Kurulumu**
+   Firebase entegrasyonu için [FIREBASE_SETUP.md](FIREBASE_SETUP.md) dosyasındaki adımları izleyin.
+
+4. **Uygulamayı Çalıştırın**
    ```bash
    # Debug mode
    flutter run
@@ -70,7 +81,7 @@ Modern, kapsamlı bir anne-bebek gelişim takip uygulaması. Flutter ile gelişt
    flutter run -d <device_id>
    ```
 
-4. **Build İşlemleri**
+5. **Build İşlemleri**
    ```bash
    # Android APK
    flutter build apk --release
@@ -116,9 +127,10 @@ Modern, kapsamlı bir anne-bebek gelişim takip uygulaması. Flutter ile gelişt
 lib/
 ├── core/           # Çekirdek işlevsellik
 │   ├── constants/  # Sabitler
+│   ├── repositories/ # Repository katmanı (Fake, Real, Mock)
 │   ├── services/   # Servisler (Database, Network)
 │   ├── theme/      # Tema konfigürasyonu
-│   └── utils/      # Yardımcı sınıflar
+│   └── utils/      # Yardımcı sınıflar (ErrorHandler)
 ├── features/       # Özellik modülleri
 │   ├── auth/       # Kimlik doğrulama
 │   ├── home/       # Ana ekran
@@ -141,6 +153,13 @@ lib/
 - **Migration System**: Versiyon güncellemeleri
 - **Indexing**: Performance optimizasyonu
 - **Foreign Keys**: Veri bütünlüğü
+
+### Hata Yönetimi
+- **ErrorHandler Utility**: Merkezi hata yönetimi
+- **Custom Exception Types**: Uygulamaya özel hata türleri
+- **Production Logging**: Firebase Crashlytics entegrasyonu
+- **Retry Mechanism**: Otomatik yeniden deneme
+- **Network Connectivity**: Gelişmiş bağlantı kontrolü
 
 ## 🔧 API Referansı
 
@@ -174,6 +193,19 @@ class BabyProvider with ChangeNotifier {
     required DateTime birthDate,
     // ... diğer parametreler
   });
+}
+```
+
+#### ErrorHandler
+```dart
+class ErrorHandler {
+  static String getErrorMessage(String errorCode, {String? customMessage});
+  static String getErrorCodeFromException(dynamic exception);
+  static void logError(dynamic error, StackTrace? stackTrace, {String? context});
+  static Future<T> handleAsyncOperation<T>(Future<T> Function() operation, {String? context});
+  static T handleSyncOperation<T>(T Function() operation, {String? context});
+  static Future<bool> checkNetworkConnection();
+  static Future<T> retry<T>(Future<T> Function() operation, {int maxAttempts = 3});
 }
 ```
 
@@ -228,6 +260,13 @@ flutter test integration_test/
 ```bash
 flutter test --coverage
 ```
+
+### Hata Testi
+Uygulama, çeşitli hata senaryolarını test etmek için mock repository'ler içerir:
+- Ağ hataları
+- Veritabanı hataları
+- Sunucu hataları
+- Zaman aşımı hataları
 
 ## 📊 Performans
 
@@ -285,6 +324,7 @@ xcodebuild -exportArchive -archivePath build/ios/archive/Runner.xcarchive -expor
 - ✅ Offline-first mimari
 - ✅ Material Design 3 uyumluluk
 - ✅ Güvenlik iyileştirmeleri
+- ✅ Gelişmiş hata yönetimi sistemi
 
 ### v1.1.0 (Planned)
 - 🔄 Push notifications
@@ -319,6 +359,8 @@ Bu projede kullanılan açık kaynak kütüphanelere ve topluluğa teşekkür ed
 - Provider Package
 - Google Fonts
 - Material Design Icons
+- Firebase Crashlytics
+- Connectivity Plus
 
 ---
 

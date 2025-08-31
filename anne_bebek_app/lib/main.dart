@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 // Providers
 import 'shared/providers/baby_provider.dart';
@@ -18,7 +20,8 @@ import 'core/services/database_service.dart';
 import 'core/services/network_service.dart';
 import 'core/services/sync_service.dart';
 import 'core/repositories/health_repository.dart';
-import 'core/repositories/fake_health_repository.dart'; // Fake Repo
+import 'core/repositories/fake_health_repository.dart';
+import 'core/repositories/real_health_repository.dart'; // Real Repo
 import 'core/repositories/recommendation_repository.dart';
 import 'core/theme/app_theme.dart';
 
@@ -29,6 +32,18 @@ import 'features/home/bottom_navigation.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Firebase'i başlat
+  try {
+    await Firebase.initializeApp();
+    
+    // Firebase Crashlytics'i yapılandır
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
+  } catch (e) {
+    debugPrint('Firebase başlatılırken hata: $e');
+  }
+
   // Servisleri başlat
   final dbService = DatabaseService.instance;
   final networkService = NetworkService();
@@ -38,7 +53,7 @@ void main() async {
   );
 
   // Repository'leri başlat
-  final healthRepo = FakeHealthRepository(); // Fake Repository kullanılıyor
+  final healthRepo = RealHealthRepository(); // Real Repository kullanılıyor
   final recommendationRepo = RecommendationRepository(
     databaseService: dbService,
     networkService: networkService,
@@ -178,7 +193,9 @@ class _AppInitializerState extends State<AppInitializer> {
       }
 
       await Future.delayed(const Duration(seconds: 1));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      // Hataları Firebase Crashlytics'e gönder
+      await FirebaseCrashlytics.instance.recordError(e, stackTrace);
       debugPrint('Uygulama başlatılırken hata: $e');
     }
   }

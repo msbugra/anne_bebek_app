@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 /// Uygulama genelinde tutarlı hata yönetimi için utility sınıfı
 class ErrorHandler {
@@ -11,6 +13,11 @@ class ErrorHandler {
   static const String authenticationError = 'authentication_error';
   static const String permissionError = 'permission_error';
   static const String unknownError = 'unknown_error';
+  // Extended error types
+  static const String serverError = 'server_error';
+  static const String timeoutError = 'timeout_error';
+  static const String parseError = 'parse_error';
+  static const String cacheError = 'cache_error';
 
   /// Hata mesajları
   static const Map<String, String> _errorMessages = {
@@ -22,6 +29,10 @@ class ErrorHandler {
     permissionError: 'Bu işlem için gerekli izinlere sahip değilsiniz.',
     unknownError:
         'Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.',
+    serverError: 'Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.',
+    timeoutError: 'İstek zaman aşımına uğradı. Lütfen tekrar deneyin.',
+    parseError: 'Veri işlenirken hata oluştu. Lütfen destek ile iletişime geçin.',
+    cacheError: 'Önbellek hatası oluştu. Lütfen uygulamayı yeniden başlatın.',
   };
 
   /// Hata kodundan kullanıcı dostu mesaj döndürür
@@ -35,11 +46,19 @@ class ErrorHandler {
   static String getErrorCodeFromException(dynamic exception) {
     if (exception is SocketException || exception is HttpException) {
       return networkError;
+    } else if (exception is TimeoutException) {
+      return timeoutError;
     } else if (exception is DatabaseException ||
         exception.toString().contains('database')) {
       return databaseError;
     } else if (exception is FormatException || exception is ArgumentError) {
-      return validationError;
+      return parseError;
+    } else if (exception is FileSystemException ||
+        exception.toString().contains('cache')) {
+      return cacheError;
+    } else if (exception.toString().contains('404') ||
+        exception.toString().contains('500')) {
+      return serverError;
     } else {
       return unknownError;
     }
@@ -50,7 +69,7 @@ class ErrorHandler {
     dynamic error,
     StackTrace? stackTrace, {
     String? context,
-  }) {
+  }) async {
     final errorMessage =
         '''
 Error: $error
@@ -63,8 +82,18 @@ Time: ${DateTime.now()}
     if (kDebugMode) {
       print('🚨 APP ERROR: $errorMessage');
     } else {
-      // Production'da logging servisi kullanılabilir
-      // Firebase Crashlytics, Sentry vb.
+      // Production'da Firebase Crashlytics kullan
+      try {
+        await FirebaseCrashlytics.instance.recordError(
+          error,
+          stackTrace,
+          reason: context,
+          information: [errorMessage],
+        );
+      } catch (e) {
+        // If Firebase fails, at least print to console
+        debugPrint('Failed to log to Firebase Crashlytics: $e');
+      }
     }
   }
 
@@ -92,7 +121,12 @@ Time: ${DateTime.now()}
         return defaultValue;
       }
 
-      rethrow;
+      // AppException olarak yeniden fırlat
+      if (error is AppException) {
+        rethrow;
+      } else {
+        throw AppException(errorCode, errorMessage, originalError: error);
+      }
     }
   }
 
@@ -119,7 +153,12 @@ Time: ${DateTime.now()}
         return defaultValue;
       }
 
-      rethrow;
+      // AppException olarak yeniden fırlat
+      if (error is AppException) {
+        rethrow;
+      } else {
+        throw AppException(errorCode, errorMessage, originalError: error);
+      }
     }
   }
 
@@ -201,8 +240,8 @@ Time: ${DateTime.now()}
   /// Network bağlantı kontrolü
   static Future<bool> checkNetworkConnection() async {
     try {
-      // Bu kısım connectivity_plus paketi ile genişletilebilir
-      return true; // Şimdilik her zaman true döndür
+      final connectivityResult = await Connectivity().checkConnectivity();
+      return connectivityResult != ConnectivityResult.none;
     } catch (e) {
       return false;
     }
@@ -261,4 +300,24 @@ class ValidationException extends AppException {
         message,
         originalError: originalError,
       );
+}
+
+class ServerException extends AppException {
+  ServerException(String message, {dynamic originalError})
+    : super(ErrorHandler.serverError, message, originalError: originalError);
+}
+
+class TimeoutException extends AppException {
+  TimeoutException(String message, {dynamic originalError})
+    : super(ErrorHandler.timeoutError, message, originalError: originalError);
+}
+
+class ParseException extends AppException {
+  ParseException(String message, {dynamic originalError})
+    : super(ErrorHandler.parseError, message, originalError: originalError);
+}
+
+class CacheException extends AppException {
+  CacheException(String message, {dynamic originalError})
+    : super(ErrorHandler.cacheError, message, originalError: originalError);
 }
