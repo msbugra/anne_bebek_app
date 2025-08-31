@@ -33,7 +33,6 @@ class CustomSwitch extends StatefulWidget {
 class _CustomSwitchState extends State<CustomSwitch>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _switchAnimation;
   late Animation<Color?> _colorAnimation;
 
   @override
@@ -42,10 +41,6 @@ class _CustomSwitchState extends State<CustomSwitch>
     _animationController = AnimationController(
       vsync: this,
       duration: AppConstants.shortAnimation,
-    );
-
-    _switchAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
 
     _colorAnimation =
@@ -111,7 +106,7 @@ class _CustomSwitchState extends State<CustomSwitch>
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withAlpha(51),
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         ),

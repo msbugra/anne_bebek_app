@@ -29,7 +29,7 @@ class CompatibilityCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(compact ? 12 : 16),
           boxShadow: [
             BoxShadow(
-              color: _getCompatibilityColor().withOpacity(0.3),
+              color: _getCompatibilityColor().withAlpha(77),
               blurRadius: compact ? 8 : 12,
               offset: Offset(0, compact ? 4 : 6),
             ),
@@ -48,7 +48,7 @@ class CompatibilityCard extends StatelessWidget {
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withAlpha(51),
             shape: BoxShape.circle,
           ),
           child: Center(
@@ -80,7 +80,7 @@ class CompatibilityCard extends StatelessWidget {
                 compatibility.compatibilityLevelDisplayName,
                 style: GoogleFonts.inter(
                   fontSize: 12,
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withAlpha(204),
                 ),
               ),
               const SizedBox(height: 4),
@@ -88,7 +88,7 @@ class CompatibilityCard extends StatelessWidget {
                 children: [
                   Icon(
                     _getCompatibilityIcon(),
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withAlpha(204),
                     size: 14,
                   ),
                   const SizedBox(width: 4),
@@ -97,7 +97,7 @@ class CompatibilityCard extends StatelessWidget {
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withAlpha(204),
                     ),
                   ),
                 ],
@@ -108,7 +108,7 @@ class CompatibilityCard extends StatelessWidget {
         if (onTap != null)
           Icon(
             Icons.arrow_forward_ios_rounded,
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withAlpha(179),
             size: 16,
           ),
       ],
@@ -129,7 +129,7 @@ class CompatibilityCard extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withAlpha(51),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -154,7 +154,7 @@ class CompatibilityCard extends StatelessWidget {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withAlpha(51),
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -173,7 +173,7 @@ class CompatibilityCard extends StatelessWidget {
                       '/10',
                       style: GoogleFonts.inter(
                         fontSize: 12,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withAlpha(204),
                       ),
                     ),
                   ],
@@ -191,7 +191,7 @@ class CompatibilityCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withAlpha(51),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
@@ -221,7 +221,7 @@ class CompatibilityCard extends StatelessWidget {
           compatibility.compatibilityDescription,
           style: GoogleFonts.inter(
             fontSize: 14,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withAlpha(230),
             height: 1.5,
           ),
           textAlign: TextAlign.center,
@@ -233,7 +233,7 @@ class CompatibilityCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withAlpha(26),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -277,7 +277,7 @@ class CompatibilityCard extends StatelessWidget {
                                 strength,
                                 style: GoogleFonts.inter(
                                   fontSize: 11,
-                                  color: Colors.white.withOpacity(0.9),
+                                  color: Colors.white.withAlpha(230),
                                 ),
                               ),
                             ),
@@ -300,13 +300,13 @@ class CompatibilityCard extends StatelessWidget {
                 'Detaylı analiz için dokunun',
                 style: GoogleFonts.inter(
                   fontSize: 12,
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withAlpha(179),
                 ),
               ),
               const SizedBox(width: 4),
               Icon(
                 Icons.touch_app_rounded,
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withAlpha(179),
                 size: 16,
               ),
             ],
@@ -323,7 +323,7 @@ class CompatibilityCard extends StatelessWidget {
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withAlpha(51),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Center(
@@ -338,7 +338,7 @@ class CompatibilityCard extends StatelessWidget {
           label,
           style: GoogleFonts.inter(
             fontSize: 10,
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withAlpha(204),
           ),
         ),
         Text(
@@ -425,7 +425,7 @@ class CompatibilityScoreIndicator extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: _getScoreColor().withOpacity(0.3),
+                color: _getScoreColor().withAlpha(77),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -504,7 +504,7 @@ class CompatibilityProgressBar extends StatelessWidget {
         Container(
           height: height,
           decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withAlpha(51),
             borderRadius: BorderRadius.circular(height / 2),
           ),
           child: FractionallySizedBox(
@@ -583,7 +583,7 @@ class CompatibilityTipsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(13),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -598,7 +598,7 @@ class CompatibilityTipsCard extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withAlpha(26),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(icon, color: color, size: 18),

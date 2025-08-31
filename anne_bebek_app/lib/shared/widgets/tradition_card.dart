@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 import '../models/cultural_tradition_model.dart';
 import '../providers/culture_provider.dart';
 import '../../features/culture/tradition_detail_screen.dart';
@@ -69,7 +70,7 @@ class TraditionCard extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: _getOriginColor().withOpacity(0.1),
+            color: _getOriginColor().withAlpha((255 * 0.1).round()),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -129,9 +130,12 @@ class TraditionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: _getOriginColor().withOpacity(0.1),
+        color: _getOriginColor().withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _getOriginColor().withOpacity(0.3), width: 1),
+        border: Border.all(
+          color: _getOriginColor().withAlpha((255 * 0.3).round()),
+          width: 1,
+        ),
       ),
       child: Text(
         tradition.originDisplayName,
@@ -159,7 +163,7 @@ class TraditionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -269,12 +273,21 @@ class TraditionCard extends StatelessWidget {
   }
 
   void _shareTraditon(BuildContext context) {
-    // TODO: Implement share functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${tradition.title} paylaşım özelliği yakında eklenecek'),
-        duration: const Duration(seconds: 2),
-      ),
+    final title = tradition.title;
+    final desc = tradition.description;
+    final origin = tradition.originDisplayName;
+    final category = tradition.categoryDisplayName;
+    final age = tradition.ageRangeDisplayName;
+
+    final text = StringBuffer()
+      ..writeln('“$title”')
+      ..writeln(desc)
+      ..writeln()
+      ..writeln('#$origin #$category #$age')
+      ..writeln('Anne-Bebek Rehberi');
+
+    SharePlus.instance.share(
+      ShareParams(text: text.toString(), subject: title),
     );
   }
 
@@ -364,7 +377,7 @@ class GridTraditionCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: _getOriginColor().withOpacity(0.1),
+                      color: _getOriginColor().withAlpha((255 * 0.1).round()),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Icon(
@@ -430,10 +443,10 @@ class GridTraditionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
-                  color: _getOriginColor().withOpacity(0.1),
+                  color: _getOriginColor().withAlpha((255 * 0.1).round()),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: _getOriginColor().withOpacity(0.3),
+                    color: _getOriginColor().withAlpha((255 * 0.3).round()),
                     width: 1,
                   ),
                 ),

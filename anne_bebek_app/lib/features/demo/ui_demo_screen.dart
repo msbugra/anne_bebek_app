@@ -21,7 +21,6 @@ class UIDemoScreen extends StatefulWidget {
 
 class _UIDemoScreenState extends State<UIDemoScreen> {
   bool _showSkeleton = true;
-  bool _isLoading = false;
   int _currentDemoIndex = 0;
 
   final List<String> _demoTitles = [
@@ -519,7 +518,7 @@ class _UIDemoScreenState extends State<UIDemoScreen> {
               value: _showSkeleton,
               onChanged: (value) {
                 setState(() {
-                  _showSkeleton = value ?? false;
+                  _showSkeleton = value;
                 });
               },
               semanticLabel: 'Demo switch',
@@ -627,7 +626,6 @@ class _UIDemoScreenState extends State<UIDemoScreen> {
   void _resetDemo() {
     setState(() {
       _showSkeleton = true;
-      _isLoading = false;
       _currentDemoIndex = 0;
     });
   }

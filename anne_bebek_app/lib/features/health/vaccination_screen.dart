@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:csv/csv.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import '../../shared/providers/health_provider.dart';
 import '../../shared/providers/baby_provider.dart';
 import '../../shared/models/vaccination_model.dart';
 import '../../shared/widgets/vaccination_card.dart';
+import '../../shared/widgets/custom_switch.dart';
 import 'vaccination_detail_screen.dart';
 
 class VaccinationScreen extends StatefulWidget {
@@ -285,9 +289,9 @@ class _VaccinationScreenState extends State<VaccinationScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Column(
         children: [
@@ -484,44 +488,21 @@ class _VaccinationScreenState extends State<VaccinationScreen>
           builder: (context, setDialogState) {
             return AlertDialog(
               title: const Text('Filtrele'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  RadioListTile<VaccineStatus?>(
-                    title: const Text('Tümü'),
-                    value: null,
-                    groupValue: tempStatus,
-                    onChanged: (value) =>
-                        setDialogState(() => tempStatus = value),
-                  ),
-                  RadioListTile<VaccineStatus?>(
-                    title: const Text('Planlanmış'),
+              content: CustomRadioGroup<VaccineStatus?>(
+                value: tempStatus,
+                onChanged: (value) => setDialogState(() => tempStatus = value),
+                options: const [
+                  RadioOption(value: null, title: 'Tümü'),
+                  RadioOption(
                     value: VaccineStatus.scheduled,
-                    groupValue: tempStatus,
-                    onChanged: (value) =>
-                        setDialogState(() => tempStatus = value),
+                    title: 'Planlanmış',
                   ),
-                  RadioListTile<VaccineStatus?>(
-                    title: const Text('Tamamlanmış'),
+                  RadioOption(
                     value: VaccineStatus.completed,
-                    groupValue: tempStatus,
-                    onChanged: (value) =>
-                        setDialogState(() => tempStatus = value),
+                    title: 'Tamamlanmış',
                   ),
-                  RadioListTile<VaccineStatus?>(
-                    title: const Text('Gecikmiş'),
-                    value: VaccineStatus.delayed,
-                    groupValue: tempStatus,
-                    onChanged: (value) =>
-                        setDialogState(() => tempStatus = value),
-                  ),
-                  RadioListTile<VaccineStatus?>(
-                    title: const Text('Atlanmış'),
-                    value: VaccineStatus.skipped,
-                    groupValue: tempStatus,
-                    onChanged: (value) =>
-                        setDialogState(() => tempStatus = value),
-                  ),
+                  RadioOption(value: VaccineStatus.delayed, title: 'Gecikmiş'),
+                  RadioOption(value: VaccineStatus.skipped, title: 'Atlanmış'),
                 ],
               ),
               actions: [
@@ -569,11 +550,11 @@ class _VaccinationScreenState extends State<VaccinationScreen>
       'T.C. Sağlık Bakanlığı\'na göre aşı takvimi oluşturulsun mu? Mevcut kayıtlar korunacaktır.',
     );
 
+    if (!mounted) return;
     if (confirm) {
       final success = await healthProvider.generateVaccinationSchedule(
         babyProvider.currentBaby!.birthDate,
       );
-
       if (success) {
         _showMessage('Aşı takvimi başarıyla oluşturuldu');
       } else {
@@ -583,8 +564,59 @@ class _VaccinationScreenState extends State<VaccinationScreen>
   }
 
   void _exportVaccinations() {
-    // TODO: Implement export functionality
-    _showMessage('Dışa aktarma özelliği yakında eklenecek');
+    final healthProvider = Provider.of<HealthProvider>(context, listen: false);
+    final vaccinations = healthProvider.vaccinations;
+
+    if (vaccinations.isEmpty) {
+      _showMessage('Dışa aktarılacak aşı kaydı yok');
+      return;
+    }
+
+    Future(() async {
+      try {
+        final rows = <List<dynamic>>[];
+        rows.add([
+          'Aşı Adı',
+          'Doz',
+          'Planlanan Tarih',
+          'Uygulanan Tarih',
+          'Durum',
+          'Konum',
+          'Notlar',
+          'Gecikme (gün)',
+        ]);
+
+        for (final v in vaccinations) {
+          rows.add([
+            v.vaccineName,
+            v.doseNumber,
+            _formatDate(v.scheduledDate),
+            v.administeredDate != null ? _formatDate(v.administeredDate!) : '',
+            v.statusDisplayName,
+            v.location ?? '',
+            v.notes ?? '',
+            v.delayDays,
+          ]);
+        }
+
+        final csv = const ListToCsvConverter().convert(rows);
+        final dir = await getApplicationDocumentsDirectory();
+        final file = File(
+          '${dir.path}/vaccinations_${DateTime.now().millisecondsSinceEpoch}.csv',
+        );
+        await file.writeAsString(csv);
+
+        if (!mounted) return;
+        _showMessage('Dışa aktarıldı: ${file.path}');
+      } catch (e) {
+        if (!mounted) return;
+        _showMessage('Dışa aktarım hatası: $e');
+      }
+    });
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }
 
   void _navigateToDetail(VaccinationModel vaccination) {
@@ -619,6 +651,7 @@ class _VaccinationScreenState extends State<VaccinationScreen>
       '${vaccination.vaccineName} aşı kaydı silinsin mi? Bu işlem geri alınamaz.',
     );
 
+    if (!mounted) return;
     if (confirm) {
       final healthProvider = Provider.of<HealthProvider>(
         context,
@@ -628,6 +661,7 @@ class _VaccinationScreenState extends State<VaccinationScreen>
         vaccination.id!.toString(),
       );
 
+      if (!mounted) return;
       if (success) {
         _showMessage('Aşı kaydı silindi');
       } else {
@@ -645,6 +679,7 @@ class _VaccinationScreenState extends State<VaccinationScreen>
 
     final success = await healthProvider.updateVaccination(updatedVaccination);
 
+    if (!mounted) return;
     if (success) {
       _showMessage('Aşı tamamlandı olarak işaretlendi');
     } else {

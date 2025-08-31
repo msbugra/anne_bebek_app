@@ -36,11 +36,11 @@ class AdService {
   Future<void> initialize() async {
     if (_isInitialized) return;
 
-    // Web platformunda reklamları devre dışı bırak
-    if (kIsWeb) {
+    // Web ve desteklenmeyen platformlarda reklamları devre dışı bırak
+    if (!_adsSupportedPlatform) {
       _isInitialized = true;
       if (AdConstants.enableAdLogging) {
-        debugPrint('🎯 AdService: Web platform detected - Ads disabled');
+        debugPrint('🎯 AdService: Platform not supported for ads - disabled');
       }
       return;
     }
@@ -74,13 +74,16 @@ class AdService {
   }
 
   /// Banner reklamı yükler
-  Future<void> loadBannerAd({Function(AdStatus)? onStatusChanged}) async {
-    // Web platformunda reklam yükleme
-    if (kIsWeb) {
+  Future<void> loadBannerAd({
+    AdSize? size,
+    Function(AdStatus)? onStatusChanged,
+  }) async {
+    // Desteklenmeyen platformlarda reklam yükleme
+    if (!_adsSupportedPlatform) {
       _onBannerAdStatusChanged = onStatusChanged;
       _onBannerAdStatusChanged?.call(AdStatus.failed);
       if (AdConstants.enableAdLogging) {
-        debugPrint('⚠️ Banner ad not supported on web platform');
+        debugPrint('⚠️ Banner ad not supported on this platform');
       }
       return;
     }
@@ -101,14 +104,17 @@ class AdService {
 
       _bannerAd = BannerAd(
         adUnitId: AdConstants.bannerAdUnitId,
-        size: AdSize.banner,
+        size: size ?? AdSize.banner,
         request: const AdRequest(),
         listener: BannerAdListener(
           onAdLoaded: (ad) {
             _isBannerAdLoaded = true;
             _onBannerAdStatusChanged?.call(AdStatus.loaded);
             if (AdConstants.enableAdLogging) {
-              debugPrint('✅ Banner ad loaded successfully');
+              final bannerAd = ad as BannerAd;
+              debugPrint(
+                '✅ Banner ad loaded successfully with size: ${bannerAd.size.width}x${bannerAd.size.height}',
+              );
             }
           },
           onAdFailedToLoad: (ad, error) {
@@ -144,12 +150,12 @@ class AdService {
 
   /// Interstitial reklamı yükler
   Future<void> loadInterstitialAd({Function(AdStatus)? onStatusChanged}) async {
-    // Web platformunda reklam yükleme
-    if (kIsWeb) {
+    // Desteklenmeyen platformlarda reklam yükleme
+    if (!_adsSupportedPlatform) {
       _onInterstitialAdStatusChanged = onStatusChanged;
       _onInterstitialAdStatusChanged?.call(AdStatus.failed);
       if (AdConstants.enableAdLogging) {
-        debugPrint('⚠️ Interstitial ad not supported on web platform');
+        debugPrint('⚠️ Interstitial ad not supported on this platform');
       }
       return;
     }
@@ -217,12 +223,12 @@ class AdService {
 
   /// Rewarded reklamı yükler
   Future<void> loadRewardedAd({Function(AdStatus)? onStatusChanged}) async {
-    // Web platformunda reklam yükleme
-    if (kIsWeb) {
+    // Desteklenmeyen platformlarda reklam yükleme
+    if (!_adsSupportedPlatform) {
       _onRewardedAdStatusChanged = onStatusChanged;
       _onRewardedAdStatusChanged?.call(AdStatus.failed);
       if (AdConstants.enableAdLogging) {
-        debugPrint('⚠️ Rewarded ad not supported on web platform');
+        debugPrint('⚠️ Rewarded ad not supported on this platform');
       }
       return;
     }
@@ -391,4 +397,11 @@ class AdService {
   bool get isInterstitialAdLoaded => _isInterstitialAdLoaded;
   bool get isRewardedAdLoaded => _isRewardedAdLoaded;
   BannerAd? get bannerAd => _bannerAd;
+
+  bool get _adsSupportedPlatform {
+    if (kIsWeb) return false;
+    return defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS; // GMA supports macOS
+  }
 }

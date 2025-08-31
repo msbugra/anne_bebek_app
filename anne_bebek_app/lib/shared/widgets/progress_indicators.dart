@@ -156,7 +156,9 @@ class _DotsProgressIndicatorState extends State<DotsProgressIndicator>
               height: widget.dotSize,
               margin: EdgeInsets.symmetric(horizontal: widget.dotSize / 2),
               decoration: BoxDecoration(
-                color: defaultColor.withOpacity(_animations[index].value),
+                color: defaultColor.withAlpha(
+                  (255 * _animations[index].value).round(),
+                ),
                 shape: BoxShape.circle,
               ),
             );
@@ -219,7 +221,9 @@ class _PulseProgressIndicatorState extends State<PulseProgressIndicator>
           width: widget.size,
           height: widget.size,
           decoration: BoxDecoration(
-            color: defaultColor.withOpacity(_animation.value * 0.3),
+            color: defaultColor.withAlpha(
+              (255 * (_animation.value * 0.3)).round(),
+            ),
             shape: BoxShape.circle,
           ),
           child: Center(
@@ -227,7 +231,7 @@ class _PulseProgressIndicatorState extends State<PulseProgressIndicator>
               width: widget.size * 0.6,
               height: widget.size * 0.6,
               decoration: BoxDecoration(
-                color: defaultColor.withOpacity(_animation.value),
+                color: defaultColor.withAlpha((255 * _animation.value).round()),
                 shape: BoxShape.circle,
               ),
             ),
@@ -331,7 +335,9 @@ class LoadingOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final defaultOverlayColor = theme.colorScheme.surface.withOpacity(0.8);
+    final defaultOverlayColor = theme.colorScheme.surface.withAlpha(
+      (255 * 0.8).round(),
+    );
 
     return Stack(
       children: [

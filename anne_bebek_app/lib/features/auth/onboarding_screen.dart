@@ -204,15 +204,12 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                               gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
-                                colors: [
-                                  page.color,
-                                  page.color.withOpacity(0.8),
-                                ],
+                                colors: [page.color, page.color.withAlpha(204)],
                               ),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: page.color.withOpacity(0.3),
+                                  color: page.color.withAlpha(77),
                                   blurRadius: 20,
                                   offset: const Offset(0, 10),
                                 ),
@@ -394,7 +391,7 @@ class _InteractiveOnboardingScreenState
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
+                            color: Colors.black.withAlpha(51),
                             blurRadius: 30,
                             offset: const Offset(0, 15),
                           ),
@@ -430,7 +427,7 @@ class _InteractiveOnboardingScreenState
                 'Bebeğinizle birlikte büyüyoruz',
                 style: GoogleFonts.inter(
                   fontSize: 18,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withAlpha(230),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -499,7 +496,7 @@ class _InteractiveOnboardingScreenState
           width: 48,
           height: 48,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withAlpha(51),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: Colors.white, size: 24),
@@ -522,7 +519,7 @@ class _InteractiveOnboardingScreenState
                 description,
                 style: GoogleFonts.inter(
                   fontSize: 14,
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withAlpha(204),
                 ),
               ),
             ],

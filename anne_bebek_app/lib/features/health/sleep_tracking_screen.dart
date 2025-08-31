@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:csv/csv.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import '../../shared/providers/health_provider.dart';
 import '../../shared/providers/baby_provider.dart';
 import '../../shared/models/sleep_tracking_model.dart';
 import '../../shared/widgets/health_chart.dart';
+import 'add_sleep_record_screen.dart';
 
 class SleepTrackingScreen extends StatefulWidget {
   const SleepTrackingScreen({super.key});
@@ -120,7 +124,6 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen>
     final sleepRecords = healthProvider.sleepRecords;
     final sleepStatistics = healthProvider.sleepStatistics;
     final latestSleepRecord = healthProvider.latestSleepRecord;
-    final baby = Provider.of<BabyProvider>(context).currentBaby;
 
     return RefreshIndicator(
       onRefresh: _loadSleepData,
@@ -137,7 +140,7 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen>
               const SizedBox(height: 16),
             ],
             if (sleepRecords.isNotEmpty) ...[
-              _buildSleepPatternCard(sleepRecords, baby),
+              _buildSleepPatternCard(sleepRecords),
               const SizedBox(height: 16),
               _buildRecentSleepRecords(sleepRecords),
             ] else
@@ -299,9 +302,9 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen>
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Column(
         children: [
@@ -386,9 +389,9 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Column(
         children: [
@@ -412,12 +415,9 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen>
     );
   }
 
-  Widget _buildSleepPatternCard(
-    List<SleepTrackingModel> sleepRecords,
-    dynamic baby,
-  ) {
-    final baby = Provider.of<BabyProvider>(context).currentBaby;
-    final babyAgeInDays = baby?.ageInDays ?? 0;
+  Widget _buildSleepPatternCard(List<SleepTrackingModel> sleepRecords) {
+    final currentBaby = Provider.of<BabyProvider>(context).currentBaby;
+    final babyAgeInDays = currentBaby?.ageInDays ?? 0;
     final recommendations = SleepPatternAnalyzer.getSleepRecommendations(
       sleepRecords,
       babyAgeInDays,
@@ -638,7 +638,7 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen>
         leading: CircleAvatar(
           backgroundColor: _getSleepQualityColor(
             record.sleepQuality,
-          ).withOpacity(0.1),
+          ).withAlpha((255 * 0.1).round()),
           child: Icon(
             Icons.bedtime,
             color: _getSleepQualityColor(record.sleepQuality),
@@ -821,7 +821,56 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen>
   }
 
   void _exportSleepReport() {
-    _showMessage('Rapor dışa aktarma özelliği yakında eklenecek');
+    final healthProvider = Provider.of<HealthProvider>(context, listen: false);
+    final records = healthProvider.sleepRecords;
+    if (records.isEmpty) {
+      _showMessage('Dışa aktarılacak uyku kaydı yok');
+      return;
+    }
+
+    Future(() async {
+      try {
+        final rows = <List<dynamic>>[];
+        rows.add([
+          'Tarih',
+          'Yatış',
+          'Kalkış',
+          'Gece Uyku (dk)',
+          'Gündüz Uyku Sayısı',
+          'Gündüz Uyku (dk)',
+          'Toplam (dk)',
+          'Kalite',
+          'Notlar',
+        ]);
+
+        for (final r in records) {
+          rows.add([
+            _formatDate(r.sleepDate),
+            r.bedTime ?? '',
+            r.wakeTime ?? '',
+            r.nightSleepDurationMinutes ?? '',
+            r.napCount ?? '',
+            r.napDurationMinutes ?? '',
+            r.totalSleepDurationMinutes ?? '',
+            r.sleepQualityDisplayName,
+            r.notes ?? '',
+          ]);
+        }
+
+        final csv = const ListToCsvConverter().convert(rows);
+        final dir = await getApplicationDocumentsDirectory();
+        final file = File(
+          '${dir.path}/sleep_report_${DateTime.now().millisecondsSinceEpoch}.csv',
+        );
+        await file.writeAsString(csv);
+
+        if (!mounted) return;
+        _showMessage('Rapor kaydedildi: ${file.path}');
+      } catch (e) {
+        if (!mounted) return;
+        _showMessage('Rapor oluşturulurken hata: $e');
+      }
+    });
   }
 
   void _showSleepRecommendations() {
@@ -875,13 +924,58 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen>
   }
 
   void _showSleepAnalysis() {
-    // TODO: Implement detailed sleep analysis
-    _showMessage('Detaylı uyku analizi yakında eklenecek');
+    final healthProvider = Provider.of<HealthProvider>(context, listen: false);
+    final records = healthProvider.sleepRecords;
+    if (records.isEmpty) {
+      _showMessage('Analiz için uyku kaydı bulunmuyor');
+      return;
+    }
+
+    final weekly = SleepPatternAnalyzer.calculateWeeklyAverage(records);
+    final optimal = SleepPatternAnalyzer.suggestOptimalBedtime(records);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Detaylı Uyku Analizi'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _analysisRow(
+              'Ortalama Toplam Uyku',
+              '${(weekly['averageTotalSleep'] as double).toStringAsFixed(1)} saat',
+            ),
+            _analysisRow(
+              'Ortalama Gece Uykusu',
+              '${(weekly['averageNightSleep'] as double).toStringAsFixed(1)} saat',
+            ),
+            _analysisRow(
+              'Ortalama Gündüz Uykusu',
+              '${(weekly['averageNapTime'] as double).toStringAsFixed(1)} saat',
+            ),
+            _analysisRow(
+              'Tutarlılık Skoru',
+              '${(((weekly['consistencyScore'] as double) * 100).toInt())}%',
+            ),
+            if (optimal != null) _analysisRow('Önerilen Yatış Saati', optimal),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Kapat'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _addSleepRecord() {
-    // TODO: Implement add sleep record
-    _showMessage('Uyku kaydı ekleme özelliği yakında eklenecek');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const AddSleepRecordScreen()),
+    );
   }
 
   void _handleSleepRecordAction(
@@ -899,8 +993,10 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen>
   }
 
   void _editSleepRecord(SleepTrackingModel record) {
-    // TODO: Implement edit sleep record
-    _showMessage('Uyku kaydı düzenleme özelliği yakında eklenecek');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => AddSleepRecordScreen(record: record)),
+    );
   }
 
   Future<void> _deleteSleepRecord(SleepTrackingModel record) async {
@@ -908,6 +1004,8 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen>
       'Uyku Kaydını Sil',
       'Bu uyku kaydı silinsin mi? Bu işlem geri alınamaz.',
     );
+
+    if (!mounted) return;
 
     if (confirm) {
       final healthProvider = Provider.of<HealthProvider>(
@@ -917,6 +1015,8 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen>
       final success = await healthProvider.deleteSleepRecord(
         record.id!.toString(),
       );
+
+      if (!mounted) return;
 
       if (success) {
         _showMessage('Uyku kaydı silindi');
@@ -950,6 +1050,21 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen>
   void _showMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
+    );
+  }
+
+  Widget _analysisRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Expanded(child: Text(label, style: const TextStyle(fontSize: 14))),
+          Text(
+            value,
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+          ),
+        ],
+      ),
     );
   }
 }

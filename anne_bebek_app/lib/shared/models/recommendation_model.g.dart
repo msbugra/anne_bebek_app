@@ -9,11 +9,16 @@ part of 'recommendation_model.dart';
 RecommendationModel _$RecommendationModelFromJson(Map<String, dynamic> json) =>
     RecommendationModel(
       id: (json['id'] as num?)?.toInt(),
-      babyId: (json['babyId'] as num).toInt(),
       title: json['title'] as String,
-      content: json['content'] as String,
-      category: json['category'] as String?,
-      isFavorite: json['isFavorite'] as bool? ?? false,
+      description: json['description'] as String,
+      category: json['category'] as String,
+      dayNumber: (json['dayNumber'] as num).toInt(),
+      details: json['details'] as String?,
+      scientificSource: json['scientificSource'] as String?,
+      benefits: (json['benefits'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      source: json['source'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
 
@@ -21,10 +26,13 @@ Map<String, dynamic> _$RecommendationModelToJson(
   RecommendationModel instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'babyId': instance.babyId,
   'title': instance.title,
-  'content': instance.content,
+  'description': instance.description,
   'category': instance.category,
-  'isFavorite': instance.isFavorite,
+  'dayNumber': instance.dayNumber,
+  'details': instance.details,
+  'scientificSource': instance.scientificSource,
+  'benefits': instance.benefits,
+  'source': instance.source,
   'createdAt': instance.createdAt.toIso8601String(),
 };

@@ -70,11 +70,13 @@ class SkeletonText extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: List.generate(lines, (index) {
-          final width = index == lines - 1 ? 0.7 : 1.0; // Last line shorter
+          final isLastLine = index == lines - 1;
           return Container(
             margin: EdgeInsets.only(bottom: index < lines - 1 ? spacing : 0),
             child: SkeletonLoader(
-              width: double.infinity,
+              width: isLastLine
+                  ? MediaQuery.of(context).size.width * 0.7
+                  : double.infinity,
               height: lineHeight,
               borderRadius: BorderRadius.circular(4.0),
             ),

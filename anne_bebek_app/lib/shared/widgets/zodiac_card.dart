@@ -43,7 +43,7 @@ class ZodiacCard extends StatelessWidget {
             BoxShadow(
               color: AstrologyProvider.getZodiacColor(
                 zodiacSign,
-              ).withOpacity(0.25),
+              ).withAlpha((255 * 0.25).round()),
               blurRadius: compact ? 8 : 12,
               offset: Offset(0, compact ? 4 : 6),
             ),
@@ -61,7 +61,7 @@ class ZodiacCard extends StatelessWidget {
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withAlpha((255 * 0.2).round()),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Center(
@@ -90,7 +90,7 @@ class ZodiacCard extends StatelessWidget {
                   subtitle!,
                   style: GoogleFonts.inter(
                     fontSize: 12,
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withAlpha((255 * 0.8).round()),
                   ),
                 ),
               ],
@@ -101,7 +101,7 @@ class ZodiacCard extends StatelessWidget {
                     AstrologyProvider.getElementIcon(
                       ZodiacCalculator.getZodiacElement(zodiacSign),
                     ),
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withAlpha((255 * 0.8).round()),
                     size: 14,
                   ),
                   const SizedBox(width: 4),
@@ -111,7 +111,7 @@ class ZodiacCard extends StatelessWidget {
                     ),
                     style: GoogleFonts.inter(
                       fontSize: 12,
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withAlpha((255 * 0.8).round()),
                     ),
                   ),
                 ],
@@ -122,7 +122,7 @@ class ZodiacCard extends StatelessWidget {
         if (onTap != null)
           Icon(
             Icons.arrow_forward_ios_rounded,
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withAlpha((255 * 0.7).round()),
             size: 16,
           ),
       ],
@@ -140,7 +140,7 @@ class ZodiacCard extends StatelessWidget {
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withAlpha((255 * 0.2).round()),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Center(
@@ -167,7 +167,7 @@ class ZodiacCard extends StatelessWidget {
                     ZodiacCalculator.getZodiacDateRange(zodiacSign),
                     style: GoogleFonts.inter(
                       fontSize: 12,
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withAlpha((255 * 0.8).round()),
                     ),
                   ),
                   if (subtitle != null) ...[
@@ -177,7 +177,7 @@ class ZodiacCard extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withAlpha((255 * 0.9).round()),
                       ),
                     ),
                   ],
@@ -216,7 +216,7 @@ class ZodiacCard extends StatelessWidget {
             characteristics!.generalDescription,
             style: GoogleFonts.inter(
               fontSize: 14,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withAlpha((255 * 0.9).round()),
               height: 1.5,
             ),
           ),
@@ -247,7 +247,7 @@ class ZodiacCard extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
+                      color: Colors.white.withAlpha((255 * 0.15).round()),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -273,13 +273,13 @@ class ZodiacCard extends StatelessWidget {
                 'Detaylar için dokunun',
                 style: GoogleFonts.inter(
                   fontSize: 12,
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withAlpha((255 * 0.7).round()),
                 ),
               ),
               const SizedBox(width: 4),
               Icon(
                 Icons.touch_app_rounded,
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withAlpha((255 * 0.7).round()),
                 size: 16,
               ),
             ],
@@ -293,7 +293,7 @@ class ZodiacCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
+        color: Colors.white.withAlpha((255 * 0.15).round()),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -346,7 +346,7 @@ class MotherBabyZodiacCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFFF6B6B).withOpacity(0.3),
+              color: const Color(0xFFFF6B6B).withAlpha((255 * 0.3).round()),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -379,7 +379,7 @@ class MotherBabyZodiacCard extends StatelessWidget {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withAlpha((255 * 0.2).round()),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -407,7 +407,7 @@ class MotherBabyZodiacCard extends StatelessWidget {
                   vertical: 12,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withAlpha((255 * 0.2).round()),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -434,7 +434,7 @@ class MotherBabyZodiacCard extends StatelessWidget {
                 'Detaylı analiz için dokunun',
                 style: GoogleFonts.inter(
                   fontSize: 12,
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withAlpha((255 * 0.8).round()),
                 ),
               ),
             ],
@@ -451,7 +451,7 @@ class MotherBabyZodiacCard extends StatelessWidget {
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withAlpha((255 * 0.2).round()),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Center(
@@ -466,7 +466,7 @@ class MotherBabyZodiacCard extends StatelessWidget {
           role,
           style: GoogleFonts.inter(
             fontSize: 11,
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withAlpha((255 * 0.8).round()),
           ),
         ),
         Text(
@@ -505,7 +505,9 @@ class MiniZodiacCard extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isSelected
-              ? AstrologyProvider.getZodiacColor(zodiacSign).withOpacity(0.1)
+              ? AstrologyProvider.getZodiacColor(
+                  zodiacSign,
+                ).withAlpha((255 * 0.1).round())
               : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: isSelected
@@ -513,10 +515,10 @@ class MiniZodiacCard extends StatelessWidget {
                   color: AstrologyProvider.getZodiacColor(zodiacSign),
                   width: 2,
                 )
-              : Border.all(color: Colors.grey.withOpacity(0.2)),
+              : Border.all(color: Colors.grey.withAlpha((255 * 0.2).round())),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha((255 * 0.05).round()),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),

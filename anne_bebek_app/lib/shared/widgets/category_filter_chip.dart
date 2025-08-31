@@ -28,9 +28,7 @@ class CategoryFilterChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected
-              ? effectiveColor.withOpacity(0.1)
-              : Colors.transparent,
+          color: isSelected ? effectiveColor.withAlpha(26) : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? effectiveColor : const Color(0xFFE5E7EB),
@@ -315,7 +313,7 @@ class CultureFilters extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(13),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

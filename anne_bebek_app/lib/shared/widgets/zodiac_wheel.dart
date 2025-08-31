@@ -174,7 +174,7 @@ class ZodiacWheelPainter extends CustomPainter {
     canvas.drawCircle(Offset(centerX, centerY), outerRadius, paint);
 
     // Gölge
-    paint.color = Colors.black.withOpacity(0.1);
+    paint.color = Colors.black.withAlpha((255 * 0.1).round());
     paint.maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
     canvas.drawCircle(Offset(centerX, centerY), outerRadius, paint);
     paint.maskFilter = null;
@@ -195,11 +195,11 @@ class ZodiacWheelPainter extends CustomPainter {
       // Renk belirleme
       Color signColor = AstrologyProvider.getZodiacColor(sign);
       if (sign == selectedSign) {
-        signColor = signColor.withOpacity(1.0);
+        signColor = signColor.withAlpha((255 * 1.0).round());
       } else if (sign == hoveredSign) {
-        signColor = signColor.withOpacity(0.8);
+        signColor = signColor.withAlpha((255 * 0.8).round());
       } else {
-        signColor = signColor.withOpacity(0.6);
+        signColor = signColor.withAlpha((255 * 0.6).round());
       }
 
       // Segment çiz
@@ -266,7 +266,9 @@ class ZodiacWheelPainter extends CustomPainter {
         text: AstrologyProvider.getZodiacEmoji(sign),
         style: TextStyle(
           fontSize: highlighted ? 24 : 20,
-          color: highlighted ? Colors.white : Colors.white.withOpacity(0.9),
+          color: highlighted
+              ? Colors.white
+              : Colors.white.withAlpha((255 * 0.9).round()),
         ),
       ),
       textAlign: TextAlign.center,
@@ -282,7 +284,7 @@ class ZodiacWheelPainter extends CustomPainter {
     // Arka plan çember (vurgu için)
     if (highlighted) {
       final Paint backgroundPaint = Paint()
-        ..color = Colors.white.withOpacity(0.2)
+        ..color = Colors.white.withAlpha((255 * 0.2).round())
         ..style = PaintingStyle.fill;
       canvas.drawCircle(position, 16, backgroundPaint);
     }
@@ -357,7 +359,7 @@ class ZodiacWheelLegend extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha((255 * 0.05).round()),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -393,7 +395,9 @@ class ZodiacWheelLegend extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: isSelected
-            ? AstrologyProvider.getZodiacColor(sign).withOpacity(0.1)
+            ? AstrologyProvider.getZodiacColor(
+                sign,
+              ).withAlpha((255 * 0.1).round())
             : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
         border: isSelected

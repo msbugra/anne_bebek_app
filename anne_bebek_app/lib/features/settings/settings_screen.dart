@@ -9,6 +9,10 @@ import 'edit_mother_profile_screen.dart';
 import 'edit_baby_profile_screen.dart';
 import 'theme_settings_screen.dart';
 import 'data_management_screen.dart';
+import 'notifications_settings_screen.dart';
+import 'language_settings_screen.dart';
+import 'privacy_settings_screen.dart';
+import 'support_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -151,10 +155,10 @@ class SettingsScreen extends StatelessWidget {
           subtitle: 'Bildirim tercihlerini yönet',
           icon: Icons.notifications_rounded,
           onTap: () {
-            // TODO: Navigate to notifications settings
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Bildirim ayarları yakında eklenecek'),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NotificationsSettingsScreen(),
               ),
             );
           },
@@ -168,9 +172,11 @@ class SettingsScreen extends StatelessWidget {
           subtitle: 'Türkçe',
           icon: Icons.language_rounded,
           onTap: () {
-            // TODO: Navigate to language settings
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Dil ayarları yakında eklenecek')),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LanguageSettingsScreen(),
+              ),
             );
           },
         ),
@@ -215,10 +221,10 @@ class SettingsScreen extends StatelessWidget {
           subtitle: 'Veri paylaşım tercihleri',
           icon: Icons.security_rounded,
           onTap: () {
-            // TODO: Navigate to privacy settings
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Gizlilik ayarları yakında eklenecek'),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PrivacySettingsScreen(),
               ),
             );
           },
@@ -264,9 +270,9 @@ class SettingsScreen extends StatelessWidget {
           subtitle: 'Yardım ve geri bildirim',
           icon: Icons.help_rounded,
           onTap: () {
-            // TODO: Navigate to support screen
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Destek sayfası yakında eklenecek')),
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SupportScreen()),
             );
           },
         ),

@@ -109,7 +109,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
             borderRadius: widget.borderRadius ?? BorderRadius.circular(8.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withAlpha(26),
                 blurRadius: 4,
                 offset: const Offset(0, 2),
               ),
@@ -238,19 +238,27 @@ class _AdaptiveBannerAdWidgetState extends State<AdaptiveBannerAdWidget> {
       final screenWidth = MediaQuery.of(context).size.width;
 
       // Adaptive banner boyutu hesapla
-      final adaptiveSize =
+      final adSize =
           await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
             screenWidth.truncate(),
           );
 
-      if (adaptiveSize != null) {
-        _adSize = AdSize(
-          width: adaptiveSize.width,
-          height: adaptiveSize.height,
-        );
+      if (adSize == null) {
+        debugPrint('Adaptive banner size could not be determined.');
+        if (mounted) {
+          setState(() {
+            _adStatus = AdStatus.failed;
+            _isLoading = false;
+          });
+          widget.onAdStatusChanged?.call(AdStatus.failed);
+        }
+        return;
       }
 
+      _adSize = adSize;
+
       await _adService.loadBannerAd(
+        size: _adSize,
         onStatusChanged: (status) {
           if (mounted) {
             setState(() {
@@ -305,7 +313,7 @@ class _AdaptiveBannerAdWidgetState extends State<AdaptiveBannerAdWidget> {
             borderRadius: widget.borderRadius ?? BorderRadius.circular(8.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withAlpha(26),
                 blurRadius: 4,
                 offset: const Offset(0, 2),
               ),

@@ -125,7 +125,7 @@ class _RegistrationSuccessScreenState extends State<RegistrationSuccessScreen>
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
+                                color: Colors.black.withAlpha(51),
                                 blurRadius: 30,
                                 offset: const Offset(0, 15),
                               ),
@@ -189,7 +189,7 @@ class _RegistrationSuccessScreenState extends State<RegistrationSuccessScreen>
                         'Artık kişisel öneriler ve gelişim takibi alabilirsiniz.',
                         style: GoogleFonts.inter(
                           fontSize: 16,
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withAlpha(230),
                           height: 1.5,
                         ),
                         textAlign: TextAlign.center,
@@ -268,11 +268,32 @@ class _RegistrationSuccessScreenState extends State<RegistrationSuccessScreen>
                       CustomButton(
                         text: 'Profili İncele',
                         onPressed: () {
-                          // TODO: Profile screen'e git
-                          _navigateToHome();
+                          Navigator.of(context).pushAndRemoveUntil(
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const AppInitializer(
+                                        navigateToSettings: true,
+                                      ),
+                              transitionsBuilder:
+                                  (
+                                    context,
+                                    animation,
+                                    secondaryAnimation,
+                                    child,
+                                  ) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    );
+                                  },
+                              transitionDuration: AppConstants.mediumAnimation,
+                            ),
+                            (route) => false,
+                          );
                         },
                         type: ButtonType.text,
-                        foregroundColor: Colors.white.withOpacity(0.8),
+                        foregroundColor: Colors.white.withAlpha(204),
                         fullWidth: true,
                         icon: Icons.person_rounded,
                       ),
@@ -327,7 +348,7 @@ class _RegistrationSuccessScreenState extends State<RegistrationSuccessScreen>
           width: 48,
           height: 48,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withAlpha(51),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: Colors.white, size: 24),
@@ -350,7 +371,7 @@ class _RegistrationSuccessScreenState extends State<RegistrationSuccessScreen>
                 description,
                 style: GoogleFonts.inter(
                   fontSize: 14,
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withAlpha(204),
                 ),
               ),
             ],
@@ -426,7 +447,7 @@ class _MinimalSuccessScreenState extends State<MinimalSuccessScreen>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF10B981).withOpacity(0.3),
+                        color: const Color(0xFF10B981).withAlpha(77),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),

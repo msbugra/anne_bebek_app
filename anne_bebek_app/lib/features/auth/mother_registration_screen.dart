@@ -125,6 +125,9 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen>
       );
 
       if (success && mounted) {
+        debugPrint(
+          '🔍 [DEBUG] Mother registration successful, navigating to baby screen',
+        );
         // Bebek kayıt ekranına geç
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
@@ -149,7 +152,9 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen>
             transitionDuration: AppConstants.mediumAnimation,
           ),
         );
+        debugPrint('🔍 [DEBUG] Navigation to baby screen completed');
       } else {
+        debugPrint('🔍 [DEBUG] Mother registration failed or not mounted');
         // Provider'dan detaylı hata mesajını al
         final errorMessage =
             babyProvider.errorMessage ??
@@ -297,10 +302,10 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen>
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF6B4EFF).withOpacity(0.1),
+                color: const Color(0xFF6B4EFF).withAlpha(26),
                 borderRadius: BorderRadius.circular(AppConstants.borderRadius),
                 border: Border.all(
-                  color: const Color(0xFF6B4EFF).withOpacity(0.3),
+                  color: const Color(0xFF6B4EFF).withAlpha(77),
                 ),
               ),
               child: Row(
@@ -380,11 +385,9 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF10B981).withOpacity(0.1),
+              color: const Color(0xFF10B981).withAlpha(26),
               borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-              border: Border.all(
-                color: const Color(0xFF10B981).withOpacity(0.3),
-              ),
+              border: Border.all(color: const Color(0xFF10B981).withAlpha(77)),
             ),
             child: Row(
               children: [
@@ -459,7 +462,7 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen>
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: const Color(0xFFEF4444).withOpacity(0.1),
+                color: const Color(0xFFEF4444).withAlpha(26),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(
@@ -476,10 +479,10 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen>
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFFEF4444).withOpacity(0.1),
+                color: const Color(0xFFEF4444).withAlpha(26),
                 borderRadius: BorderRadius.circular(AppConstants.borderRadius),
                 border: Border.all(
-                  color: const Color(0xFFEF4444).withOpacity(0.3),
+                  color: const Color(0xFFEF4444).withAlpha(77),
                 ),
               ),
               child: Row(
@@ -565,9 +568,9 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha(26),
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withAlpha(51)),
       ),
       child: Row(
         children: [
@@ -575,7 +578,7 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen>
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withAlpha(51),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -616,7 +619,7 @@ class _MotherRegistrationScreenState extends State<MotherRegistrationScreen>
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(13),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),

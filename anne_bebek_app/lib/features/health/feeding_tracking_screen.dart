@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../shared/providers/health_provider.dart';
 import '../../shared/providers/baby_provider.dart';
-import '../../shared/models/feeding_tracking_model.dart';
+import '../../shared/models/feeding_tracking_model.dart' hide BreastSide;
 import '../../shared/models/breastfeeding_tracking_model.dart';
+import 'add_feeding_record_screen.dart';
+import 'feeding_timer_screen.dart';
 
 class FeedingTrackingScreen extends StatefulWidget {
   const FeedingTrackingScreen({super.key});
@@ -322,9 +324,9 @@ class _FeedingTrackingScreenState extends State<FeedingTrackingScreen>
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Column(
         children: [
@@ -419,9 +421,9 @@ class _FeedingTrackingScreenState extends State<FeedingTrackingScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Column(
         children: [
@@ -645,7 +647,7 @@ class _FeedingTrackingScreenState extends State<FeedingTrackingScreen>
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: Colors.pink.withOpacity(0.1),
+          backgroundColor: Colors.pink.withAlpha((255 * 0.1).round()),
           child: const Icon(Icons.child_care, color: Colors.pink),
         ),
         title: Text('Emzirme - ${record.durationText}'),
@@ -694,7 +696,7 @@ class _FeedingTrackingScreenState extends State<FeedingTrackingScreen>
         leading: CircleAvatar(
           backgroundColor: _getFeedingTypeColor(
             record.feedingType,
-          ).withOpacity(0.1),
+          ).withAlpha((255 * 0.1).round()),
           child: Icon(
             _getFeedingTypeIcon(record.feedingType),
             color: _getFeedingTypeColor(record.feedingType),
@@ -1053,14 +1055,44 @@ class _FeedingTrackingScreenState extends State<FeedingTrackingScreen>
     );
   }
 
-  void _startFeedingTimer() {
-    // TODO: Implement feeding timer
-    _showMessage('Emzirme timer özelliği yakında eklenecek');
+  void _startFeedingTimer() async {
+    final babyId = Provider.of<BabyProvider>(
+      context,
+      listen: false,
+    ).currentBaby?.id;
+    if (babyId == null) {
+      _showMessage('Lütfen önce bir bebek seçin.');
+      return;
+    }
+
+    final result = await Navigator.push<Duration>(
+      context,
+      MaterialPageRoute(builder: (context) => const FeedingTimerScreen()),
+    );
+
+    if (result != null && mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddFeedingRecordScreen(
+            breastfeedingRecord: BreastfeedingTrackingModel(
+              babyId: babyId,
+              feedingDateTime: DateTime.now(),
+              durationMinutes: result.inMinutes,
+              breastSide: BreastSide.left, // Default value
+              createdAt: DateTime.now(),
+            ),
+          ),
+        ),
+      ).then((_) => _loadFeedingData());
+    }
   }
 
   void _addFeedingRecord() {
-    // TODO: Implement add feeding record
-    _showMessage('Beslenme kaydı ekleme özelliği yakında eklenecek');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AddFeedingRecordScreen()),
+    ).then((_) => _loadFeedingData());
   }
 
   void _showAllFeedingRecords() {
@@ -1144,8 +1176,13 @@ class _FeedingTrackingScreenState extends State<FeedingTrackingScreen>
   }
 
   void _editBreastfeedingRecord(BreastfeedingTrackingModel record) {
-    // TODO: Implement edit breastfeeding record
-    _showMessage('Emzirme kaydı düzenleme özelliği yakında eklenecek');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            AddFeedingRecordScreen(breastfeedingRecord: record),
+      ),
+    ).then((_) => _loadFeedingData());
   }
 
   Future<void> _deleteBreastfeedingRecord(
@@ -1156,6 +1193,8 @@ class _FeedingTrackingScreenState extends State<FeedingTrackingScreen>
       'Bu emzirme kaydı silinsin mi? Bu işlem geri alınamaz.',
     );
 
+    if (!mounted) return;
+
     if (confirm) {
       final healthProvider = Provider.of<HealthProvider>(
         context,
@@ -1164,6 +1203,8 @@ class _FeedingTrackingScreenState extends State<FeedingTrackingScreen>
       final success = await healthProvider.deleteBreastfeedingRecord(
         record.id!.toString(),
       );
+
+      if (!mounted) return;
 
       if (success) {
         _showMessage('Emzirme kaydı silindi');
@@ -1185,8 +1226,12 @@ class _FeedingTrackingScreenState extends State<FeedingTrackingScreen>
   }
 
   void _editFeedingRecord(FeedingTrackingModel record) {
-    // TODO: Implement edit feeding record
-    _showMessage('Beslenme kaydı düzenleme özelliği yakında eklenecek');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddFeedingRecordScreen(feedingRecord: record),
+      ),
+    ).then((_) => _loadFeedingData());
   }
 
   Future<void> _deleteFeedingRecord(FeedingTrackingModel record) async {
@@ -1194,6 +1239,8 @@ class _FeedingTrackingScreenState extends State<FeedingTrackingScreen>
       'Beslenme Kaydını Sil',
       'Bu beslenme kaydı silinsin mi? Bu işlem geri alınamaz.',
     );
+
+    if (!mounted) return;
 
     if (confirm) {
       final healthProvider = Provider.of<HealthProvider>(
@@ -1203,6 +1250,8 @@ class _FeedingTrackingScreenState extends State<FeedingTrackingScreen>
       final success = await healthProvider.deleteFeedingRecord(
         record.id!.toString(),
       );
+
+      if (!mounted) return;
 
       if (success) {
         _showMessage('Beslenme kaydı silindi');

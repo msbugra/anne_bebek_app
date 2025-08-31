@@ -110,11 +110,11 @@ class BabyProvider with ChangeNotifier {
       setLoading(true);
       DateTime now = DateTime.now();
 
-      print('🔍 [DEBUG] Saving mother profile with name: $name');
-      print('🔍 [DEBUG] Birth date: $birthDate');
-      print('🔍 [DEBUG] Birth city: $birthCity');
-      print('🔍 [DEBUG] Astrology enabled: $astrologyEnabled');
-      print('🔍 [DEBUG] Zodiac sign: $zodiacSign');
+      // print('🔍 [DEBUG] Saving mother profile with name: $name');
+      // print('🔍 [DEBUG] Birth date: $birthDate');
+      // print('🔍 [DEBUG] Birth city: $birthCity');
+      // print('🔍 [DEBUG] Astrology enabled: $astrologyEnabled');
+      // print('🔍 [DEBUG] Zodiac sign: $zodiacSign');
 
       MotherModel mother = MotherModel(
         id: _currentMother?.id,
@@ -127,20 +127,20 @@ class BabyProvider with ChangeNotifier {
         updatedAt: now,
       );
 
-      print('🔍 [DEBUG] Mother model created: ${mother.toMap()}');
+      // print('🔍 [DEBUG] Mother model created: ${mother.toMap()}');
 
       int motherId;
       if (_currentMother?.id == null) {
         // Yeni anne kaydı
-        print('🔍 [DEBUG] Inserting new mother record');
+        // print('🔍 [DEBUG] Inserting new mother record');
         motherId = await _databaseService.insert('mothers', mother.toMap());
-        print('🔍 [DEBUG] Inserted mother with ID: $motherId');
+        // print('🔍 [DEBUG] Inserted mother with ID: $motherId');
         mother = mother.copyWith(id: motherId);
       } else {
         // Anne bilgisi güncelleme
-        print(
-          '🔍 [DEBUG] Updating existing mother record with ID: ${_currentMother!.id}',
-        );
+        // print(
+        //   '🔍 [DEBUG] Updating existing mother record with ID: ${_currentMother!.id}',
+        // );
         await _databaseService.update(
           'mothers',
           mother.toMap(),
@@ -157,13 +157,13 @@ class BabyProvider with ChangeNotifier {
       await prefs.setString(AppConstants.keyMotherName, name);
       await prefs.setBool(AppConstants.keyAstrologyEnabled, astrologyEnabled);
 
-      print('🔍 [DEBUG] Mother profile saved successfully');
+      // print('🔍 [DEBUG] Mother profile saved successfully');
       _clearError();
       notifyListeners();
       return true;
     } catch (e) {
-      print('❌ [ERROR] Failed to save mother profile: $e');
-      print('❌ [ERROR] Stack trace: ${StackTrace.current}');
+      // print('❌ [ERROR] Failed to save mother profile: $e');
+      // print('❌ [ERROR] Stack trace: ${StackTrace.current}');
       _setError('Anne profili kaydedilirken hata oluştu: $e');
       return false;
     } finally {
@@ -264,6 +264,36 @@ class BabyProvider with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       _setError('Profil sıfırlanırken hata oluştu: $e');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  /// Hesabı ve tüm verileri kalıcı olarak sil.
+  ///
+  /// - Veritabanındaki tüm tabloları düşürür ve yeniden oluşturur
+  /// - SharedPreferences temizlenir
+  /// - Bellekteki anne/bebek durumu sıfırlanır
+  Future<void> deleteAccount() async {
+    try {
+      setLoading(true);
+
+      // Veritabanındaki tüm verileri sil
+      await _databaseService.deleteAllData();
+
+      // SharedPreferences'ı temizle
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
+      // Bellek durumunu temizle
+      _currentBaby = null;
+      _currentMother = null;
+      _clearError();
+
+      notifyListeners();
+    } catch (e) {
+      _setError('Hesap silinirken hata oluştu: $e');
+      rethrow;
     } finally {
       setLoading(false);
     }

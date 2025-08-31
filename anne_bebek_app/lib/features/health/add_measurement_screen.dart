@@ -196,9 +196,9 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Column(
         children: [
@@ -287,9 +287,9 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Column(
         children: [
@@ -667,7 +667,7 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withAlpha((255 * 0.2).round()),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, -2),
@@ -734,6 +734,8 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
       'Bu ölçüm kaydı silinsin mi? Bu işlem geri alınamaz.',
     );
 
+    if (!mounted) return;
+
     if (confirm) {
       final healthProvider = Provider.of<HealthProvider>(
         context,
@@ -743,10 +745,12 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
       final success = await healthProvider.deleteGrowthMeasurement(
         widget.measurement!.id!.toString(),
       );
+      if (!mounted) return;
       setState(() => _isLoading = false);
 
       if (success) {
         _showMessage('Ölçüm kaydı silindi');
+        if (!mounted) return;
         Navigator.pop(context);
       } else {
         _showMessage('Ölçüm kaydı silinirken hata oluştu');
@@ -833,6 +837,7 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
         headPercentile: headPercentile,
         createdAt: DateTime.now(),
       );
+      if (!mounted) return;
       success = await healthProvider.addGrowthMeasurement(measurement);
     } else {
       // Update existing measurement
@@ -846,10 +851,13 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
         heightPercentile: heightPercentile,
         headPercentile: headPercentile,
       );
+      if (!mounted) return;
       success = await healthProvider.updateGrowthMeasurement(
         updatedMeasurement,
       );
     }
+
+    if (!mounted) return;
 
     setState(() => _isLoading = false);
 
@@ -859,6 +867,7 @@ class _AddMeasurementScreenState extends State<AddMeasurementScreen> {
             ? 'Ölçüm kaydı eklendi'
             : 'Ölçüm kaydı güncellendi',
       );
+      if (!mounted) return;
       Navigator.pop(context);
     } else {
       _showMessage(

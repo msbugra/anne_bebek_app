@@ -10,6 +10,11 @@ set(BINARY_NAME "anne_bebek_app")
 # versions of CMake.
 cmake_policy(VERSION 3.14...3.25)
 
+# Reduce noise from third‑party CMake deprecation warnings during configure.
+# This does not affect compiler warnings; it only mutes CMake's own
+# "CMake Deprecation Warning" messages (e.g., from vendor CMakeLists).
+set(CMAKE_WARN_DEPRECATED OFF CACHE BOOL "Suppress CMake deprecation warnings" FORCE)
+
 # Define build configuration option.
 get_property(IS_MULTICONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(IS_MULTICONFIG)
@@ -55,7 +60,15 @@ add_subdirectory("runner")
 
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
+#
+# Some third-party plugins (e.g., Firebase C++ SDK) emit CMake deprecation
+# warnings targeting very old CMake versions. Suppress deprecation warnings
+# only while processing generated plugin files to keep local logs clean
+# without touching vendor files or muting warnings project-wide.
+set(_OLD_CMAKE_WARN_DEPRECATED "${CMAKE_WARN_DEPRECATED}")
+set(CMAKE_WARN_DEPRECATED OFF)
 include(flutter/generated_plugins.cmake)
+set(CMAKE_WARN_DEPRECATED "${_OLD_CMAKE_WARN_DEPRECATED}")
 
 
 # === Installation ===

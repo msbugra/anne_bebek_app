@@ -142,7 +142,9 @@ class _CustomTextFieldState extends State<CustomTextField>
                 boxShadow: _isFocused
                     ? [
                         BoxShadow(
-                          color: colorScheme.primary.withOpacity(0.1),
+                          color: colorScheme.primary.withAlpha(
+                            (255 * 0.1).round(),
+                          ),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -209,7 +211,9 @@ class _CustomTextFieldState extends State<CustomTextField>
                   filled: true,
                   fillColor: widget.enabled
                       ? _isFocused
-                            ? colorScheme.primary.withOpacity(0.05)
+                            ? colorScheme.primary.withAlpha(
+                                (255 * 0.05).round(),
+                              )
                             : const Color(0xFFF8F9FA)
                       : const Color(0xFFF1F3F4),
                   contentPadding:
@@ -265,7 +269,9 @@ class _CustomTextFieldState extends State<CustomTextField>
                       AppConstants.borderRadius,
                     ),
                     borderSide: BorderSide(
-                      color: const Color(0xFFE5E7EB).withOpacity(0.5),
+                      color: const Color(
+                        0xFFE5E7EB,
+                      ).withAlpha((255 * 0.5).round()),
                       width: 1.0,
                     ),
                   ),

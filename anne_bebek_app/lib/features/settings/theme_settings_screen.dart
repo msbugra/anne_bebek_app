@@ -263,7 +263,7 @@ class _ThemeSettingsScreenState extends State<ThemeSettingsScreen> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withAlpha((255 * 0.05).round()),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),

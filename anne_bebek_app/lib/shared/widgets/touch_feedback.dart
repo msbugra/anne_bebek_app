@@ -338,7 +338,9 @@ class EnhancedScrollBehavior extends ScrollBehavior {
   ) {
     return GlowingOverscrollIndicator(
       axisDirection: details.direction,
-      color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+      color: Theme.of(
+        context,
+      ).colorScheme.primary.withAlpha((255 * 0.3).round()),
       showLeading: true,
       showTrailing: true,
       child: child,

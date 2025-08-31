@@ -64,7 +64,7 @@ class VaccinationCard extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: statusColor.withOpacity(0.1),
+            color: statusColor.withAlpha((255 * 0.1).round()),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -126,7 +126,6 @@ class VaccinationCard extends StatelessWidget {
   }
 
   Widget _buildDateInfo(BuildContext context) {
-    final theme = Theme.of(context);
     final dateColor = vaccination.isDelayed
         ? Colors.red[600]
         : Colors.grey[600];

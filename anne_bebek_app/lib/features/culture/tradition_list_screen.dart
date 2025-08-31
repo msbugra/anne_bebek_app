@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../shared/enums/sort_option.dart';
 import '../../shared/providers/culture_provider.dart';
 import '../../shared/models/cultural_tradition_model.dart';
 import '../../shared/widgets/tradition_card.dart';
@@ -306,26 +307,36 @@ class _TraditionListScreenState extends State<TraditionListScreen> {
               ),
               const SizedBox(height: 16),
 
-              _buildSortOption('Alfabetik (A-Z)', Icons.sort_by_alpha, () {
-                // TODO: Implement sort by name A-Z
-                Navigator.pop(context);
-              }),
-
-              _buildSortOption('Alfabetik (Z-A)', Icons.sort_by_alpha, () {
-                // TODO: Implement sort by name Z-A
-                Navigator.pop(context);
-              }),
-
-              _buildSortOption('Kategoriye Göre', Icons.category, () {
-                // TODO: Implement sort by category
-                Navigator.pop(context);
-              }),
-
-              _buildSortOption('Yaş Aralığına Göre', Icons.child_care, () {
-                // TODO: Implement sort by age range
-                Navigator.pop(context);
-              }),
-
+              _buildSortOption(
+                'Alfabetik (A-Z)',
+                Icons.sort_by_alpha,
+                SortOption.alphabeticalAZ,
+                cultureProvider,
+              ),
+              _buildSortOption(
+                'Alfabetik (Z-A)',
+                Icons.sort_by_alpha,
+                SortOption.alphabeticalZA,
+                cultureProvider,
+              ),
+              _buildSortOption(
+                'Kategoriye Göre',
+                Icons.category,
+                SortOption.byCategory,
+                cultureProvider,
+              ),
+              _buildSortOption(
+                'Yaş Aralığına Göre',
+                Icons.child_care,
+                SortOption.byAgeRange,
+                cultureProvider,
+              ),
+              _buildSortOption(
+                'Kökene Göre',
+                Icons.public,
+                SortOption.byOrigin,
+                cultureProvider,
+              ),
               const SizedBox(height: 16),
             ],
           ),
@@ -334,14 +345,40 @@ class _TraditionListScreenState extends State<TraditionListScreen> {
     );
   }
 
-  Widget _buildSortOption(String title, IconData icon, VoidCallback onTap) {
+  Widget _buildSortOption(
+    String title,
+    IconData icon,
+    SortOption option,
+    CultureProvider provider,
+  ) {
+    final bool isSelected = provider.sortOption == option;
     return ListTile(
-      leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
+      leading: Icon(
+        icon,
+        color: isSelected
+            ? Theme.of(context).colorScheme.primary
+            : const Color(0xFF6B7280),
+      ),
       title: Text(
         title,
-        style: GoogleFonts.inter(fontSize: 16, color: const Color(0xFF1A1B23)),
+        style: GoogleFonts.inter(
+          fontSize: 16,
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary
+              : const Color(0xFF1A1B23),
+        ),
       ),
-      onTap: onTap,
+      onTap: () {
+        provider.sortTraditions(option);
+        Navigator.pop(context);
+      },
+      trailing: isSelected
+          ? Icon(
+              Icons.check_circle,
+              color: Theme.of(context).colorScheme.primary,
+            )
+          : null,
       contentPadding: EdgeInsets.zero,
     );
   }

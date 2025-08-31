@@ -38,8 +38,6 @@ class AccessibleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Semantics(
       label: semanticLabel,
       button: true,
@@ -55,8 +53,8 @@ class AccessibleButton extends StatelessWidget {
           autofocus: autofocus,
           focusNode: focusNode,
           style: ElevatedButton.styleFrom(
-            backgroundColor: backgroundColor ?? theme.colorScheme.primary,
-            foregroundColor: foregroundColor ?? theme.colorScheme.onPrimary,
+            backgroundColor: backgroundColor,
+            foregroundColor: foregroundColor,
             elevation: elevation ?? 2,
             padding:
                 padding ??
@@ -83,7 +81,7 @@ class AccessibleText extends StatelessWidget {
   final Locale? locale;
   final bool? softWrap;
   final TextOverflow? overflow;
-  final double? textScaleFactor;
+  final TextScaler? textScaler;
   final int? maxLines;
   final String? semanticsLabel;
   final TextWidthBasis? textWidthBasis;
@@ -100,7 +98,7 @@ class AccessibleText extends StatelessWidget {
     this.locale,
     this.softWrap,
     this.overflow,
-    this.textScaleFactor,
+    this.textScaler,
     this.maxLines,
     this.semanticsLabel,
     this.textWidthBasis,
@@ -121,7 +119,7 @@ class AccessibleText extends StatelessWidget {
         locale: locale,
         softWrap: softWrap,
         overflow: overflow,
-        textScaleFactor: textScaleFactor,
+        textScaler: textScaler,
         maxLines: maxLines,
         textWidthBasis: textWidthBasis,
         textHeightBehavior: textHeightBehavior,
@@ -172,8 +170,6 @@ class AccessibleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     Widget card = Card(
       color: color,
       shadowColor: shadowColor,
@@ -504,7 +500,9 @@ class AccessibleRadio<T> extends StatelessWidget {
         alignment: Alignment.center,
         child: Radio<T>(
           value: value,
+          // ignore: deprecated_member_use
           groupValue: groupValue,
+          // ignore: deprecated_member_use
           onChanged: onChanged,
           activeColor: activeColor,
           fillColor: fillColor != null
@@ -512,6 +510,7 @@ class AccessibleRadio<T> extends StatelessWidget {
               : null,
           focusNode: focusNode,
           autofocus: autofocus,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
       ),
     );

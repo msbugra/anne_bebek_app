@@ -145,7 +145,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                 borderRadius: BorderRadius.circular(AppConstants.borderRadius),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withAlpha((255 * 0.1).round()),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -215,7 +215,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: isSelected
-                                      ? const Color(0xFF6B4EFF).withOpacity(0.1)
+                                      ? const Color(
+                                          0xFF6B4EFF,
+                                        ).withAlpha((255 * 0.1).round())
                                       : null,
                                 ),
                                 child: Row(
@@ -311,7 +313,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                 decoration: BoxDecoration(
                   color: widget.enabled
                       ? _isOpen
-                            ? const Color(0xFF6B4EFF).withOpacity(0.05)
+                            ? const Color(
+                                0xFF6B4EFF,
+                              ).withAlpha((255 * 0.05).round())
                             : const Color(0xFFF8F9FA)
                       : const Color(0xFFF1F3F4),
                   borderRadius: BorderRadius.circular(

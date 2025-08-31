@@ -361,7 +361,7 @@ class _ZodiacDetailScreenState extends State<ZodiacDetailScreen>
                 BoxShadow(
                   color: AstrologyProvider.getZodiacColor(
                     widget.zodiacSign,
-                  ).withOpacity(0.3),
+                  ).withAlpha(77),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -379,7 +379,7 @@ class _ZodiacDetailScreenState extends State<ZodiacDetailScreen>
                   'Element',
                   style: GoogleFonts.inter(
                     fontSize: 12,
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withAlpha(204),
                   ),
                 ),
                 Text(
@@ -395,7 +395,7 @@ class _ZodiacDetailScreenState extends State<ZodiacDetailScreen>
                   _getElementDescription(element),
                   style: GoogleFonts.inter(
                     fontSize: 11,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withAlpha(230),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -412,7 +412,7 @@ class _ZodiacDetailScreenState extends State<ZodiacDetailScreen>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withAlpha(13),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -508,9 +508,9 @@ class _ZodiacDetailScreenState extends State<ZodiacDetailScreen>
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.05),
+        color: color.withAlpha(13),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withAlpha(51)),
       ),
       child: Text(
         tip,
@@ -589,9 +589,9 @@ class _ZodiacDetailScreenState extends State<ZodiacDetailScreen>
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.amber.withOpacity(0.1),
+                  color: Colors.amber.withAlpha(26),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.amber.withOpacity(0.3)),
+                  border: Border.all(color: Colors.amber.withAlpha(77)),
                 ),
                 child: Text(
                   name,

@@ -31,7 +31,8 @@ class ErrorHandler {
         'Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.',
     serverError: 'Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.',
     timeoutError: 'İstek zaman aşımına uğradı. Lütfen tekrar deneyin.',
-    parseError: 'Veri işlenirken hata oluştu. Lütfen destek ile iletişime geçin.',
+    parseError:
+        'Veri işlenirken hata oluştu. Lütfen destek ile iletişime geçin.',
     cacheError: 'Önbellek hatası oluştu. Lütfen uygulamayı yeniden başlatın.',
   };
 
@@ -241,7 +242,7 @@ Time: ${DateTime.now()}
   static Future<bool> checkNetworkConnection() async {
     try {
       final connectivityResult = await Connectivity().checkConnectivity();
-      return connectivityResult != ConnectivityResult.none;
+      return !connectivityResult.contains(ConnectivityResult.none);
     } catch (e) {
       return false;
     }

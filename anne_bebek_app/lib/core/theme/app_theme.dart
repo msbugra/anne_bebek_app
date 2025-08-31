@@ -32,16 +32,14 @@ class AppTheme {
       secondary: _secondaryColor,
       tertiary: _tertiaryColor,
       error: _errorColor,
-      background: isLight ? _backgroundColor : const Color(0xFF1c1b1f),
-      surface: isLight ? Colors.white : const Color(0xFF1c1b1f),
-      surfaceVariant: isLight
+      surface: isLight ? _backgroundColor : const Color(0xFF1c1b1f),
+      surfaceContainerHighest: isLight
           ? const Color(0xFFE7E0EC)
           : const Color(0xFF49454F),
       onPrimary: Colors.white,
       onSecondary: Colors.black,
       onTertiary: Colors.black,
       onError: Colors.white,
-      onBackground: isLight ? Colors.black87 : Colors.white,
       onSurface: isLight ? Colors.black87 : Colors.white,
       onSurfaceVariant: isLight
           ? const Color(0xFF49454F)
@@ -102,14 +100,14 @@ class AppTheme {
       // Input decoration theme
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        fillColor: colorScheme.surfaceContainerHighest.withAlpha(77),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
+          borderSide: BorderSide(color: colorScheme.outline.withAlpha(128)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -197,7 +195,7 @@ class AppTheme {
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return colorScheme.primary.withOpacity(0.5);
+            return colorScheme.primary.withAlpha(128);
           }
           return colorScheme.surfaceContainerHighest;
         }),
@@ -230,7 +228,7 @@ class AppTheme {
         activeTrackColor: colorScheme.primary,
         inactiveTrackColor: colorScheme.surfaceContainerHighest,
         thumbColor: colorScheme.primary,
-        overlayColor: colorScheme.primary.withOpacity(0.2),
+        overlayColor: colorScheme.primary.withAlpha(51),
         valueIndicatorColor: colorScheme.primary,
         valueIndicatorTextStyle: TextStyle(color: colorScheme.onPrimary),
       ),

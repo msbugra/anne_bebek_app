@@ -264,9 +264,7 @@ class _HomeScreenState extends State<HomeScreen>
           _buildHighlightItem(
             icon: Icons.psychology_rounded,
             title: 'Gelişimsel Dönem',
-            subtitle:
-                AgeCalculator.getDevelopmentalStage(baby.birthDate) ??
-                'Bilinmiyor',
+            subtitle: AgeCalculator.getDevelopmentalStage(baby.birthDate),
             color: Colors.blue,
           ),
           const SizedBox(height: 16),
@@ -306,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen>
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withAlpha((255 * 0.1).round()),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: color, size: 20),
@@ -488,7 +486,7 @@ class _HomeScreenState extends State<HomeScreen>
           borderRadius: BorderRadius.circular(AppConstants.borderRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha((255 * 0.05).round()),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -499,7 +497,7 @@ class _HomeScreenState extends State<HomeScreen>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withAlpha((255 * 0.1).round()),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: color, size: 24),
@@ -597,7 +595,7 @@ class _HomeScreenState extends State<HomeScreen>
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha((255 * 0.05).round()),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

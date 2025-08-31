@@ -92,7 +92,6 @@ void main() {
   group('Utility Tests', () {
     test('AgeCalculator calculates age correctly', () {
       final birthDate = DateTime(2020, 1, 1);
-      final now = DateTime(2023, 6, 15);
 
       final ageInDays = AgeCalculator.calculateAgeInDays(birthDate);
       final ageInYears = AgeCalculator.calculateAgeInYears(birthDate);

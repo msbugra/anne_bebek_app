@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../shared/models/cultural_tradition_model.dart';
 import '../../shared/providers/culture_provider.dart';
 import '../../shared/widgets/tradition_card.dart';
+import 'package:share_plus/share_plus.dart';
 
 class TraditionDetailScreen extends StatefulWidget {
   final CulturalTraditionModel tradition;
@@ -92,7 +93,7 @@ class _TraditionDetailScreenState extends State<TraditionDetailScreen> {
               Shadow(
                 offset: const Offset(0, 1),
                 blurRadius: 3,
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withAlpha(77),
               ),
             ],
           ),
@@ -102,7 +103,7 @@ class _TraditionDetailScreenState extends State<TraditionDetailScreen> {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [_getOriginColor(), _getOriginColor().withOpacity(0.8)],
+              colors: [_getOriginColor(), _getOriginColor().withAlpha(204)],
             ),
           ),
           child: Stack(
@@ -118,7 +119,7 @@ class _TraditionDetailScreenState extends State<TraditionDetailScreen> {
                       return Icon(
                         _getCategoryIcon(),
                         size: 100,
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withAlpha(51),
                       );
                     },
                   ),
@@ -129,7 +130,7 @@ class _TraditionDetailScreenState extends State<TraditionDetailScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withAlpha(51),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -241,9 +242,9 @@ class _TraditionDetailScreenState extends State<TraditionDetailScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.green.withOpacity(0.05),
+          color: Colors.green.withAlpha(13),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.green.withOpacity(0.2), width: 1),
+          border: Border.all(color: Colors.green.withAlpha(51), width: 1),
         ),
         child: Text(
           widget.tradition.howToApply!,
@@ -265,9 +266,9 @@ class _TraditionDetailScreenState extends State<TraditionDetailScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.amber.withOpacity(0.05),
+          color: Colors.amber.withAlpha(13),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.amber.withOpacity(0.3), width: 1),
+          border: Border.all(color: Colors.amber.withAlpha(77), width: 1),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -275,7 +276,7 @@ class _TraditionDetailScreenState extends State<TraditionDetailScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.amber.withOpacity(0.2),
+                color: Colors.amber.withAlpha(51),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.lightbulb, color: Colors.amber, size: 20),
@@ -305,7 +306,7 @@ class _TraditionDetailScreenState extends State<TraditionDetailScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.purple.withOpacity(0.05),
+          color: Colors.purple.withAlpha(13),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -388,7 +389,7 @@ class _TraditionDetailScreenState extends State<TraditionDetailScreen> {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withAlpha(26),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(icon, color: color, size: 20),
@@ -415,9 +416,9 @@ class _TraditionDetailScreenState extends State<TraditionDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha(26),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
+        border: Border.all(color: color.withAlpha(77), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -532,15 +533,11 @@ class _TraditionDetailScreenState extends State<TraditionDetailScreen> {
   }
 
   void _shareTraditon() {
-    // TODO: Implement share functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          '${widget.tradition.title} paylaşım özelliği yakında eklenecek',
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    final tradition = widget.tradition;
+    final shareText =
+        '${tradition.title}\n\n${tradition.description}\n\nAnne-Bebek Uygulamasından daha fazlasını keşfedin!';
+
+    SharePlus.instance.share(ShareParams(text: shareText));
   }
 
   void _showFavoriteSnackBar(bool added) {

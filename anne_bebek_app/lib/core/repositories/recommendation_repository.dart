@@ -5,14 +5,10 @@ import '../../shared/models/daily_recommendation_model.dart';
 import '../../shared/models/weekly_recommendation_model.dart';
 
 class RecommendationRepository {
-  final DatabaseService _databaseService;
-  final NetworkService _networkService;
-
   RecommendationRepository({
     required DatabaseService databaseService,
     required NetworkService networkService,
-  }) : _databaseService = databaseService,
-       _networkService = networkService;
+  });
 
   Future<List<DailyRecommendationModel>> getDailyRecommendations(
     String babyId,

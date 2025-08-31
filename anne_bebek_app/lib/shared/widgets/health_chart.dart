@@ -166,7 +166,7 @@ class HealthChart extends StatelessWidget {
               ),
               belowBarData: BarAreaData(
                 show: true,
-                color: primaryColor.withOpacity(0.1),
+                color: primaryColor.withAlpha((255 * 0.1).round()),
               ),
             ),
         ],
@@ -228,7 +228,7 @@ class HealthChart extends StatelessWidget {
             dotData: FlDotData(show: true),
             belowBarData: BarAreaData(
               show: true,
-              color: primaryColor.withOpacity(0.1),
+              color: primaryColor.withAlpha((255 * 0.1).round()),
             ),
           ),
           // Percentile lines if enabled
@@ -292,7 +292,7 @@ class HealthChart extends StatelessWidget {
             dotData: FlDotData(show: true),
             belowBarData: BarAreaData(
               show: true,
-              color: Colors.green.withOpacity(0.1),
+              color: Colors.green.withAlpha((255 * 0.1).round()),
             ),
           ),
           // Percentile lines if enabled
@@ -360,7 +360,7 @@ class HealthChart extends StatelessWidget {
             dotData: FlDotData(show: true),
             belowBarData: BarAreaData(
               show: true,
-              color: Colors.purple.withOpacity(0.1),
+              color: Colors.purple.withAlpha((255 * 0.1).round()),
             ),
           ),
           // Percentile lines if enabled
@@ -434,7 +434,7 @@ class HealthChart extends StatelessWidget {
             dotData: FlDotData(show: true),
             belowBarData: BarAreaData(
               show: true,
-              color: Colors.indigo.withOpacity(0.1),
+              color: Colors.indigo.withAlpha((255 * 0.1).round()),
             ),
           ),
         ],
@@ -564,7 +564,7 @@ class HealthChart extends StatelessWidget {
         LineChartBarData(
           spots: spots,
           isCurved: true,
-          color: colors[i].withOpacity(0.7),
+          color: colors[i].withAlpha((255 * 0.7).round()),
           barWidth: 2,
           dotData: FlDotData(show: false),
           dashArray: [5, 5],
@@ -627,7 +627,11 @@ class HealthChart extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(width: 16, height: 2, color: color.withOpacity(0.7)),
+        Container(
+          width: 16,
+          height: 2,
+          color: color.withAlpha((255 * 0.7).round()),
+        ),
         const SizedBox(width: 4),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,

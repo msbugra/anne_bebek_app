@@ -150,12 +150,12 @@ class DateTimePickerWidget extends StatelessWidget {
       },
     );
 
-    if (picked != null) {
-      onDateChanged(picked);
+    if (picked == null) return;
+    onDateChanged(picked);
 
-      if (showTime && onTimeChanged != null) {
-        _showTimePicker(context);
-      }
+    if (showTime && onTimeChanged != null) {
+      if (!context.mounted) return;
+      _showTimePicker(context);
     }
   }
 

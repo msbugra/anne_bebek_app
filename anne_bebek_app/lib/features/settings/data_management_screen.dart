@@ -14,8 +14,6 @@ class DataManagementScreen extends StatefulWidget {
 }
 
 class _DataManagementScreenState extends State<DataManagementScreen> {
-  bool _isLoading = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,7 +100,7 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withAlpha((255 * 0.05).round()),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -299,8 +297,7 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                 title: 'Tüm Verileri Sıfırla',
                 subtitle: 'Uygulamayı fabrika ayarlarına döndür',
                 icon: Icons.restore_rounded,
-                onTap: () =>
-                    _showResetConfirmationDialog(context, babyProvider),
+                onTap: () => _showResetConfirmationDialog(babyProvider),
               ),
 
               const SizedBox(height: 8),
@@ -310,7 +307,7 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                 title: 'Hesabı Sil',
                 subtitle: 'Hesabınızı ve tüm verilerinizi kalıcı olarak sil',
                 icon: Icons.delete_forever_rounded,
-                onTap: () => _showDeleteAccountDialog(context),
+                onTap: _showDeleteAccountDialog,
               ),
             ],
           ),
@@ -348,13 +345,10 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
     );
   }
 
-  Future<void> _showResetConfirmationDialog(
-    BuildContext context,
-    BabyProvider babyProvider,
-  ) async {
+  Future<void> _showResetConfirmationDialog(BabyProvider babyProvider) async {
     final result = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(
           'Tüm Verileri Sıfırla',
           style: GoogleFonts.inter(fontWeight: FontWeight.w600),
@@ -365,11 +359,11 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
+            onPressed: () => Navigator.of(dialogContext).pop(false),
             child: const Text('İptal'),
           ),
           TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () => Navigator.of(dialogContext).pop(true),
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.error,
             ),
@@ -379,39 +373,29 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
       ),
     );
 
-    if (result == true) {
-      setState(() {
-        _isLoading = true;
-      });
+    if (result != true) {
+      return;
+    }
 
-      try {
-        await babyProvider.resetProfile();
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Tüm veriler başarıyla sıfırlandı')),
-          );
-          Navigator.of(context).pop();
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Hata: $e')));
-        }
-      } finally {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      }
+    try {
+      await babyProvider.resetProfile();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tüm veriler başarıyla sıfırlandı')),
+      );
+      Navigator.of(context).pop();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Hata: $e')));
     }
   }
 
-  Future<void> _showDeleteAccountDialog(BuildContext context) async {
+  Future<void> _showDeleteAccountDialog() async {
     final result = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(
           'Hesabı Sil',
           style: GoogleFonts.inter(fontWeight: FontWeight.w600),
@@ -422,11 +406,11 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
+            onPressed: () => Navigator.of(dialogContext).pop(false),
             child: const Text('İptal'),
           ),
           TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () => Navigator.of(dialogContext).pop(true),
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.error,
             ),
@@ -436,11 +420,30 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
       ),
     );
 
-    if (result == true) {
-      // TODO: Hesap silme işlemi
+    if (result != true) {
+      return;
+    }
+
+    if (!mounted) return;
+
+    final babyProvider = Provider.of<BabyProvider>(context, listen: false);
+
+    try {
+      // Hesabı ve tüm verileri sil
+      await babyProvider.deleteAccount();
+
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Hesap silme özelliği yakında eklenecek')),
+        const SnackBar(content: Text('Hesap ve tüm veriler silindi')),
       );
+
+      // Karşılama ekranına dön (uygulamayı sıfır akışına al)
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Hata: $e')));
     }
   }
 }

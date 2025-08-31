@@ -304,19 +304,19 @@ class _CustomButtonState extends State<CustomButton>
 
     switch (widget.type) {
       case ButtonType.primary:
-        return isEnabled ? Colors.white : Colors.white.withOpacity(0.7);
+        return isEnabled ? Colors.white : Colors.white.withAlpha(179);
       case ButtonType.secondary:
         return isEnabled
             ? colorScheme.onSurface
-            : colorScheme.onSurface.withOpacity(0.5);
+            : colorScheme.onSurface.withAlpha(128);
       case ButtonType.outline:
         return isEnabled
             ? colorScheme.primary
-            : colorScheme.primary.withOpacity(0.5);
+            : colorScheme.primary.withAlpha(128);
       case ButtonType.text:
         return isEnabled
             ? colorScheme.primary
-            : colorScheme.primary.withOpacity(0.5);
+            : colorScheme.primary.withAlpha(128);
     }
   }
 
@@ -336,8 +336,8 @@ class _CustomButtonState extends State<CustomButton>
                   colors: isEnabled
                       ? [const Color(0xFF6B4EFF), const Color(0xFF8B5FFF)]
                       : [
-                          const Color(0xFF6B4EFF).withOpacity(0.5),
-                          const Color(0xFF8B5FFF).withOpacity(0.5),
+                          const Color(0xFF6B4EFF).withAlpha(128),
+                          const Color(0xFF8B5FFF).withAlpha(128),
                         ],
                 ),
           borderRadius:
@@ -346,7 +346,7 @@ class _CustomButtonState extends State<CustomButton>
           boxShadow: isEnabled && !_isPressed
               ? [
                   BoxShadow(
-                    color: const Color(0xFF6B4EFF).withOpacity(0.3),
+                    color: const Color(0xFF6B4EFF).withAlpha(77),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -363,13 +363,13 @@ class _CustomButtonState extends State<CustomButton>
           border: Border.all(
             color: isEnabled
                 ? colorScheme.outline
-                : colorScheme.outline.withOpacity(0.5),
+                : colorScheme.outline.withAlpha(128),
             width: 1,
           ),
           boxShadow: isEnabled && !_isPressed
               ? [
                   BoxShadow(
-                    color: colorScheme.shadow.withOpacity(0.1),
+                    color: colorScheme.shadow.withAlpha(26),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -386,7 +386,7 @@ class _CustomButtonState extends State<CustomButton>
           border: Border.all(
             color: isEnabled
                 ? colorScheme.primary
-                : colorScheme.primary.withOpacity(0.5),
+                : colorScheme.primary.withAlpha(128),
             width: 2,
           ),
         );
@@ -452,8 +452,6 @@ class _CustomFloatingButtonState extends State<CustomFloatingButton>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final size = widget.mini ? 40.0 : widget.size;
 
     return AnimatedBuilder(
@@ -472,7 +470,7 @@ class _CustomFloatingButtonState extends State<CustomFloatingButton>
               end: Alignment.bottomRight,
               colors: [
                 widget.backgroundColor ?? const Color(0xFF6B4EFF),
-                widget.backgroundColor?.withOpacity(0.8) ??
+                widget.backgroundColor?.withAlpha(204) ??
                     const Color(0xFF8B5FFF),
               ],
             ),
@@ -481,7 +479,7 @@ class _CustomFloatingButtonState extends State<CustomFloatingButton>
                 ? [
                     BoxShadow(
                       color: (widget.backgroundColor ?? const Color(0xFF6B4EFF))
-                          .withOpacity(0.4),
+                          .withAlpha(102),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),

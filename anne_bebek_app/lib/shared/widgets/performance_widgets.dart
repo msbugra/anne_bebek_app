@@ -394,7 +394,7 @@ class _PerformanceMonitorState extends State<PerformanceMonitor>
               left: 10,
               child: Container(
                 padding: const EdgeInsets.all(8),
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withAlpha((255 * 0.7).round()),
                 child: Text(
                   'FPS: ${_fps.toStringAsFixed(1)}',
                   style: const TextStyle(color: Colors.white, fontSize: 12),
@@ -407,7 +407,7 @@ class _PerformanceMonitorState extends State<PerformanceMonitor>
               left: 10,
               child: Container(
                 padding: const EdgeInsets.all(8),
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withAlpha((255 * 0.7).round()),
                 child: const Text(
                   'Memory: N/A', // Would need platform-specific implementation
                   style: TextStyle(color: Colors.white, fontSize: 12),

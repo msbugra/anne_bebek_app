@@ -263,16 +263,9 @@ class _CircularStepProgressState extends State<CircularStepProgress>
 
   void _updateProgress() {
     final progress = widget.currentStep / widget.totalSteps;
-    _progressAnimation =
-        Tween<double>(
-          begin: _progressAnimation.value ?? 0.0,
-          end: progress,
-        ).animate(
-          CurvedAnimation(
-            parent: _animationController,
-            curve: Curves.easeInOut,
-          ),
-        );
+    _progressAnimation = Tween<double>(begin: 0.0, end: progress).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
     _animationController.forward();
   }
 

@@ -143,9 +143,7 @@ class _BirthChartScreenState extends State<BirthChartScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AstrologyProvider.getZodiacColor(
-              zodiacSign,
-            ).withOpacity(0.3),
+            color: AstrologyProvider.getZodiacColor(zodiacSign).withAlpha(77),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -167,7 +165,7 @@ class _BirthChartScreenState extends State<BirthChartScreen> {
             '${baby.birthDate.day}.${baby.birthDate.month}.${baby.birthDate.year}',
             style: GoogleFonts.inter(
               fontSize: 14,
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withAlpha(204),
             ),
           ),
           if (baby.birthTime != null)
@@ -175,7 +173,7 @@ class _BirthChartScreenState extends State<BirthChartScreen> {
               'Doğum Saati: ${baby.birthTime}',
               style: GoogleFonts.inter(
                 fontSize: 12,
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withAlpha(204),
               ),
             ),
           const SizedBox(height: 24),
@@ -260,7 +258,7 @@ class _BirthChartScreenState extends State<BirthChartScreen> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withAlpha(26),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
@@ -364,7 +362,7 @@ class _BirthChartScreenState extends State<BirthChartScreen> {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.primary.withAlpha(26),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Center(
@@ -449,9 +447,9 @@ class _BirthChartScreenState extends State<BirthChartScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.05),
+        color: color.withAlpha(13),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withAlpha(51)),
       ),
       child: Row(
         children: [

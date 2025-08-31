@@ -6,10 +6,11 @@ import 'home_screen.dart';
 import '../health/health_dashboard_screen.dart';
 import '../recommendations/recommendations_screen.dart';
 import '../culture/culture_screen.dart';
-import '../astrology/astrology_screen.dart';
+import '../settings/settings_screen.dart';
 
 class MainBottomNavigation extends StatefulWidget {
-  const MainBottomNavigation({super.key});
+  final int initialIndex;
+  const MainBottomNavigation({super.key, this.initialIndex = 0});
 
   @override
   State<MainBottomNavigation> createState() => _MainBottomNavigationState();
@@ -22,7 +23,8 @@ class _MainBottomNavigationState extends State<MainBottomNavigation> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+    _currentIndex = widget.initialIndex;
+    _pageController = PageController(initialPage: widget.initialIndex);
   }
 
   @override
@@ -66,7 +68,7 @@ class _MainBottomNavigationState extends State<MainBottomNavigation> {
               HealthDashboardScreen(),
               RecommendationsScreen(),
               CultureScreen(),
-              AstrologyScreen(),
+              SettingsScreen(),
             ],
           ),
           bottomNavigationBar: Container(
@@ -74,7 +76,7 @@ class _MainBottomNavigationState extends State<MainBottomNavigation> {
               color: Theme.of(context).colorScheme.surface,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withAlpha(26),
                   blurRadius: 8,
                   offset: const Offset(0, -2),
                 ),
@@ -82,13 +84,13 @@ class _MainBottomNavigationState extends State<MainBottomNavigation> {
             ),
             child: SafeArea(
               child: Container(
-                height: 80,
+                height: 74,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 8,
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _buildNavItem(
                       icon: Icons.home_rounded,
@@ -111,8 +113,8 @@ class _MainBottomNavigationState extends State<MainBottomNavigation> {
                       index: 3,
                     ),
                     _buildNavItem(
-                      icon: Icons.stars_rounded,
-                      label: 'Astroloji',
+                      icon: Icons.person_rounded,
+                      label: 'Profil',
                       index: 4,
                     ),
                   ],
@@ -137,36 +139,32 @@ class _MainBottomNavigationState extends State<MainBottomNavigation> {
       onTap: () => _onTabTapped(index),
       child: AnimatedContainer(
         duration: AppConstants.shortAnimation,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: isSelected
-              ? theme.colorScheme.primary.withOpacity(0.1)
+              ? theme.colorScheme.primary.withAlpha(26)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AnimatedContainer(
-              duration: AppConstants.shortAnimation,
-              padding: const EdgeInsets.all(4),
-              child: Icon(
-                icon,
-                color: isSelected
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurface.withOpacity(0.6),
-                size: isSelected ? 26 : 24,
-              ),
+            Icon(
+              icon,
+              color: isSelected
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.onSurface.withAlpha(153),
+              size: isSelected ? 24 : 22,
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 1),
             AnimatedDefaultTextStyle(
               duration: AppConstants.shortAnimation,
               style: theme.textTheme.labelSmall!.copyWith(
                 color: isSelected
                     ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurface.withOpacity(0.6),
+                    : theme.colorScheme.onSurface.withAlpha(153),
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                fontSize: 12,
+                fontSize: 10,
               ),
               child: Text(label),
             ),

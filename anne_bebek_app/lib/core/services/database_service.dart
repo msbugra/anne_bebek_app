@@ -3,7 +3,8 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:anne_bebek_app/core/utils/error_handler.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+import 'package:anne_bebek_app/core/utils/error_handler.dart' as app_errors;
 
 class DatabaseService {
   static const String _dbName = "anne_bebek.db";
@@ -24,7 +25,22 @@ class DatabaseService {
 
   Future<Database> _initDatabase() async {
     try {
-      // Windows platformu için sqflite_ffi'yi initialize et
+      // Web platformu için özel işlem
+      if (kIsWeb) {
+        // Web için sqflite_common_ffi_web kullan
+        databaseFactory = databaseFactoryFfiWeb;
+
+        return await openDatabase(
+          _dbName,
+          version: _dbVersion,
+          onCreate: _onCreate,
+          onUpgrade: _onUpgrade,
+          onDowngrade: _onDowngrade,
+        );
+      }
+
+      // Diğer platformlar için
+      // Windows/Linux için sqflite_ffi'yi initialize et
       if (Platform.isWindows || Platform.isLinux) {
         sqfliteFfiInit();
         databaseFactory = databaseFactoryFfi;
@@ -32,10 +48,7 @@ class DatabaseService {
 
       String path;
 
-      if (kIsWeb) {
-        // Web platformu için
-        path = _dbName;
-      } else if (Platform.isWindows) {
+      if (Platform.isWindows) {
         // Windows platformu için alternatif yol - Geçici dizin kullan
         Directory tempDirectory = await getTemporaryDirectory();
         path = join(tempDirectory.path, _dbName);
@@ -55,7 +68,9 @@ class DatabaseService {
     } on DatabaseException {
       rethrow;
     } catch (e) {
-      throw DatabaseException('Veritabanı başlatılırken hata oluştu: $e');
+      throw app_errors.DatabaseException(
+        'Veritabanı başlatılırken hata oluştu: $e',
+      );
     }
   }
 
@@ -67,7 +82,9 @@ class DatabaseService {
     } on DatabaseException {
       rethrow;
     } catch (e) {
-      throw DatabaseException('Veritabanı tabloları oluşturulurken hata oluştu: $e');
+      throw app_errors.DatabaseException(
+        'Veritabanı tabloları oluşturulurken hata oluştu: $e',
+      );
     }
   }
 
@@ -80,7 +97,9 @@ class DatabaseService {
     } on DatabaseException {
       rethrow;
     } catch (e) {
-      throw DatabaseException('Veritabanı güncellenirken hata oluştu: $e');
+      throw app_errors.DatabaseException(
+        'Veritabanı güncellenirken hata oluştu: $e',
+      );
     }
   }
 
@@ -92,7 +111,9 @@ class DatabaseService {
     } on DatabaseException {
       rethrow;
     } catch (e) {
-      throw DatabaseException('Veritabanı eski sürüme düşürülürken hata oluştu: $e');
+      throw app_errors.DatabaseException(
+        'Veritabanı eski sürüme düşürülürken hata oluştu: $e',
+      );
     }
   }
 
@@ -193,14 +214,18 @@ class DatabaseService {
     } on DatabaseException {
       rethrow;
     } catch (e) {
-      throw DatabaseException('Veritabanı tabloları oluşturulurken hata oluştu: $e');
+      throw app_errors.DatabaseException(
+        'Veritabanı tabloları oluşturulurken hata oluştu: $e',
+      );
     }
   }
 
   /// Index'leri oluştur - Performance optimizasyonu
   Future<void> _createIndexes(Database db) async {
     try {
-      await db.execute('CREATE INDEX idx_babies_mother_id ON babies(mother_id)');
+      await db.execute(
+        'CREATE INDEX idx_babies_mother_id ON babies(mother_id)',
+      );
       await db.execute(
         'CREATE INDEX idx_sleep_baby_id ON sleep_tracking(baby_id)',
       );
@@ -218,7 +243,9 @@ class DatabaseService {
     } on DatabaseException {
       rethrow;
     } catch (e) {
-      throw DatabaseException('Veritabanı indexleri oluşturulurken hata oluştu: $e');
+      throw app_errors.DatabaseException(
+        'Veritabanı indexleri oluşturulurken hata oluştu: $e',
+      );
     }
   }
 
@@ -227,11 +254,33 @@ class DatabaseService {
     try {
       switch (version) {
         case 2:
-          // Version 2 migration'ları
-          await db.execute('ALTER TABLE mothers ADD COLUMN phone TEXT');
-          await db.execute('ALTER TABLE babies ADD COLUMN allergies TEXT');
-          await db.execute('ALTER TABLE mothers ADD COLUMN email TEXT');
-          await db.execute('ALTER TABLE babies ADD COLUMN medical_notes TEXT');
+          // Version 2 migration'ları - Kolon ekleme işlemleri
+          try {
+            await db.execute('ALTER TABLE mothers ADD COLUMN phone TEXT');
+          } catch (e) {
+            // Kolon zaten varsa hata verme
+            debugPrint('Phone column already exists in mothers table');
+          }
+
+          try {
+            await db.execute('ALTER TABLE babies ADD COLUMN allergies TEXT');
+          } catch (e) {
+            debugPrint('Allergies column already exists in babies table');
+          }
+
+          try {
+            await db.execute('ALTER TABLE mothers ADD COLUMN email TEXT');
+          } catch (e) {
+            debugPrint('Email column already exists in mothers table');
+          }
+
+          try {
+            await db.execute(
+              'ALTER TABLE babies ADD COLUMN medical_notes TEXT',
+            );
+          } catch (e) {
+            debugPrint('Medical_notes column already exists in babies table');
+          }
           break;
         // Gelecek migration'lar buraya eklenecek
         default:
@@ -240,7 +289,9 @@ class DatabaseService {
     } on DatabaseException {
       rethrow;
     } catch (e) {
-      throw DatabaseException('Veritabanı migration işlemi sırasında hata oluştu: $e');
+      throw app_errors.DatabaseException(
+        'Veritabanı migration işlemi sırasında hata oluştu: $e',
+      );
     }
   }
 
@@ -256,11 +307,31 @@ class DatabaseService {
     } on DatabaseException {
       rethrow;
     } catch (e) {
-      throw DatabaseException('Veritabanı tabloları silinirken hata oluştu: $e');
+      throw app_errors.DatabaseException(
+        'Veritabanı tabloları silinirken hata oluştu: $e',
+      );
     }
   }
 
   // CRUD İşlemleri
+
+  /// Uygulamadaki TÜM verileri kalıcı olarak siler.
+  ///
+  /// Tüm tabloları düşürür ve yeniden oluşturur. Bu işlem geri alınamaz.
+  Future<void> deleteAllData() async {
+    try {
+      final db = await instance.database;
+      await _dropAllTables(db);
+      await _createTables(db);
+      await _createIndexes(db);
+    } on DatabaseException {
+      rethrow;
+    } catch (e) {
+      throw app_errors.DatabaseException(
+        'Tüm veriler silinirken hata oluştu: $e',
+      );
+    }
+  }
 
   Future<int> insert(String table, Map<String, dynamic> row) async {
     try {
@@ -269,7 +340,9 @@ class DatabaseService {
     } on DatabaseException {
       rethrow;
     } catch (e) {
-      throw DatabaseException('$table tablosuna kayıt eklenirken hata oluştu: $e');
+      throw app_errors.DatabaseException(
+        '$table tablosuna kayıt eklenirken hata oluştu: $e',
+      );
     }
   }
 
@@ -292,7 +365,9 @@ class DatabaseService {
     } on DatabaseException {
       rethrow;
     } catch (e) {
-      throw DatabaseException('$table tablosundan veri alınırken hata oluştu: $e');
+      throw app_errors.DatabaseException(
+        '$table tablosundan veri alınırken hata oluştu: $e',
+      );
     }
   }
 
@@ -308,7 +383,9 @@ class DatabaseService {
     } on DatabaseException {
       rethrow;
     } catch (e) {
-      throw DatabaseException('$table tablosunda güncelleme yapılırken hata oluştu: $e');
+      throw app_errors.DatabaseException(
+        '$table tablosunda güncelleme yapılırken hata oluştu: $e',
+      );
     }
   }
 
@@ -323,7 +400,9 @@ class DatabaseService {
     } on DatabaseException {
       rethrow;
     } catch (e) {
-      throw DatabaseException('$table tablosundan silme işlemi yapılırken hata oluştu: $e');
+      throw app_errors.DatabaseException(
+        '$table tablosundan silme işlemi yapılırken hata oluştu: $e',
+      );
     }
   }
 }

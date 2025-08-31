@@ -156,7 +156,7 @@ class _VaccinationDetailScreenState extends State<VaccinationDetailScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.1),
+                    color: statusColor.withAlpha((255 * 0.1).round()),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(statusIcon, color: statusColor, size: 32),
@@ -351,7 +351,7 @@ class _VaccinationDetailScreenState extends State<VaccinationDetailScreen> {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withAlpha((255 * 0.1).round()),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: color, size: 20),
@@ -633,7 +633,7 @@ class _VaccinationDetailScreenState extends State<VaccinationDetailScreen> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withAlpha((255 * 0.2).round()),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, -2),
@@ -718,6 +718,7 @@ class _VaccinationDetailScreenState extends State<VaccinationDetailScreen> {
 
     setState(() => _isLoading = true);
     final success = await healthProvider.updateVaccination(updatedVaccination);
+    if (!mounted) return;
     setState(() => _isLoading = false);
 
     if (success) {
@@ -735,6 +736,7 @@ class _VaccinationDetailScreenState extends State<VaccinationDetailScreen> {
       'Aşı Kaydını Sil',
       'Bu aşı kaydı silinsin mi? Bu işlem geri alınamaz.',
     );
+    if (!mounted) return;
 
     if (confirm) {
       final healthProvider = Provider.of<HealthProvider>(
@@ -745,6 +747,7 @@ class _VaccinationDetailScreenState extends State<VaccinationDetailScreen> {
       final success = await healthProvider.deleteVaccination(
         widget.vaccination!.id!.toString(),
       );
+      if (!mounted) return;
       setState(() => _isLoading = false);
 
       if (success) {
@@ -806,6 +809,7 @@ class _VaccinationDetailScreenState extends State<VaccinationDetailScreen> {
       success = await healthProvider.updateVaccination(updatedVaccination);
     }
 
+    if (!mounted) return;
     setState(() => _isLoading = false);
 
     if (success) {

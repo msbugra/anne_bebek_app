@@ -51,6 +51,7 @@ class _BabyRegistrationScreenState extends State<BabyRegistrationScreen>
   @override
   void initState() {
     super.initState();
+    debugPrint('🔍 [DEBUG] BabyRegistrationScreen initialized');
     _animationController = AnimationController(
       vsync: this,
       duration: AppConstants.mediumAnimation,
@@ -353,12 +354,12 @@ class _BabyRegistrationScreenState extends State<BabyRegistrationScreen>
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6B4EFF).withOpacity(0.1),
+                  color: const Color(0xFF6B4EFF).withAlpha(26),
                   borderRadius: BorderRadius.circular(
                     AppConstants.borderRadius,
                   ),
                   border: Border.all(
-                    color: const Color(0xFF6B4EFF).withOpacity(0.3),
+                    color: const Color(0xFF6B4EFF).withAlpha(77),
                   ),
                 ),
                 child: Row(
@@ -402,10 +403,10 @@ class _BabyRegistrationScreenState extends State<BabyRegistrationScreen>
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF10B981).withOpacity(0.1),
+                color: const Color(0xFF10B981).withAlpha(26),
                 borderRadius: BorderRadius.circular(AppConstants.borderRadius),
                 border: Border.all(
-                  color: const Color(0xFF10B981).withOpacity(0.3),
+                  color: const Color(0xFF10B981).withAlpha(77),
                 ),
               ),
               child: Row(
@@ -586,11 +587,9 @@ class _BabyRegistrationScreenState extends State<BabyRegistrationScreen>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFFF59E0B).withOpacity(0.1),
+              color: const Color(0xFFF59E0B).withAlpha(26),
               borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-              border: Border.all(
-                color: const Color(0xFFF59E0B).withOpacity(0.3),
-              ),
+              border: Border.all(color: const Color(0xFFF59E0B).withAlpha(77)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -638,9 +637,9 @@ class _BabyRegistrationScreenState extends State<BabyRegistrationScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha(26),
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withAlpha(51)),
       ),
       child: Row(
         children: [
@@ -648,7 +647,7 @@ class _BabyRegistrationScreenState extends State<BabyRegistrationScreen>
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withAlpha(51),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -689,7 +688,7 @@ class _BabyRegistrationScreenState extends State<BabyRegistrationScreen>
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(13),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),

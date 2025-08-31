@@ -450,12 +450,13 @@ class ZodiacCalculator {
     int distance = calculateZodiacDistance(motherSign, babySign);
     if (distance == 0) {
       baseScore += 3; // Aynı burç
-    } else if (distance == 4)
+    } else if (distance == 4) {
       baseScore += 2; // Trin (120 derece)
-    else if (distance == 2)
+    } else if (distance == 2) {
       baseScore += 1; // Sextile (60 derece)
-    else if (distance == 6)
+    } else if (distance == 6) {
       baseScore -= 1; // Opposition (180 derece)
+    }
 
     return baseScore.clamp(1, 10);
   }

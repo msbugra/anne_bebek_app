@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:csv/csv.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../shared/providers/health_provider.dart';
@@ -5,6 +8,7 @@ import '../../shared/providers/baby_provider.dart';
 import '../../shared/models/growth_tracking_model.dart';
 import '../../shared/widgets/health_chart.dart';
 import 'add_measurement_screen.dart';
+import 'detailed_analysis_screen.dart';
 
 class GrowthTrackingScreen extends StatefulWidget {
   const GrowthTrackingScreen({super.key});
@@ -343,9 +347,9 @@ class _GrowthTrackingScreenState extends State<GrowthTrackingScreen>
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Column(
         children: [
@@ -430,9 +434,9 @@ class _GrowthTrackingScreenState extends State<GrowthTrackingScreen>
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha((255 * 0.1).round()),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withAlpha((255 * 0.3).round())),
       ),
       child: Column(
         children: [
@@ -962,14 +966,74 @@ class _GrowthTrackingScreenState extends State<GrowthTrackingScreen>
     }
   }
 
-  void _exportGrowthReport() {
-    // TODO: Implement export functionality
-    _showMessage('Rapor dışa aktarma özelliği yakında eklenecek');
+  void _exportGrowthReport() async {
+    final healthProvider = Provider.of<HealthProvider>(context, listen: false);
+    final measurements = healthProvider.growthMeasurements;
+
+    if (measurements.isEmpty) {
+      _showMessage('Dışa aktarılacak veri bulunmuyor.');
+      return;
+    }
+
+    List<List<dynamic>> rows = [];
+    rows.add([
+      "Tarih",
+      "Yaş Grubu",
+      "Kilo (kg)",
+      "Kilo Percentil",
+      "Boy (cm)",
+      "Boy Percentil",
+      "Baş Çevresi (cm)",
+      "Baş Çevresi Percentil",
+      "Büyüme Değerlendirmesi",
+      "Boy Değerlendirmesi",
+      "Baş Çevresi Değerlendirmesi",
+    ]);
+
+    for (var m in measurements) {
+      rows.add([
+        _formatDate(m.measurementDate),
+        m.ageGroup,
+        m.weight,
+        m.weightPercentile,
+        m.height,
+        m.heightPercentile,
+        m.headCircumference,
+        m.headPercentile,
+        m.growthAssessment,
+        m.heightAssessment,
+        m.headCircumferenceAssessment,
+      ]);
+    }
+
+    String csv = const ListToCsvConverter().convert(rows);
+
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final path = '${directory.path}/growth_report.csv';
+      final file = File(path);
+      await file.writeAsString(csv);
+
+      if (!mounted) return;
+      _showMessage('Rapor başarıyla şuraya kaydedildi: $path');
+    } catch (e) {
+      if (!mounted) return;
+      _showMessage('Rapor kaydedilirken bir hata oluştu: $e');
+    }
   }
 
   void _showDetailedAnalysis() {
-    // TODO: Implement detailed analysis
-    _showMessage('Detaylı analiz özelliği yakında eklenecek');
+    final measurements = Provider.of<HealthProvider>(
+      context,
+      listen: false,
+    ).growthMeasurements;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            DetailedAnalysisScreen(measurements: measurements),
+      ),
+    );
   }
 
   void _addMeasurement() {
@@ -1037,6 +1101,8 @@ class _GrowthTrackingScreenState extends State<GrowthTrackingScreen>
       'Bu ölçüm kaydı silinsin mi? Bu işlem geri alınamaz.',
     );
 
+    if (!mounted) return;
+
     if (confirm) {
       final healthProvider = Provider.of<HealthProvider>(
         context,
@@ -1045,6 +1111,8 @@ class _GrowthTrackingScreenState extends State<GrowthTrackingScreen>
       final success = await healthProvider.deleteGrowthMeasurement(
         measurement.id!.toString(),
       );
+
+      if (!mounted) return;
 
       if (success) {
         _showMessage('Ölçüm kaydı silindi');

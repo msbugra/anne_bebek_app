@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'firebase_options.dart';
 
 // Providers
 import 'shared/providers/baby_provider.dart';
@@ -18,9 +20,7 @@ import 'shared/providers/astrology_provider.dart';
 import 'core/constants/app_constants.dart';
 import 'core/services/database_service.dart';
 import 'core/services/network_service.dart';
-import 'core/services/sync_service.dart';
 import 'core/repositories/health_repository.dart';
-import 'core/repositories/fake_health_repository.dart';
 import 'core/repositories/real_health_repository.dart'; // Real Repo
 import 'core/repositories/recommendation_repository.dart';
 import 'core/theme/app_theme.dart';
@@ -34,12 +34,15 @@ void main() async {
 
   // Firebase'i başlat
   try {
-    await Firebase.initializeApp();
-    
-    // Firebase Crashlytics'i yapılandır
-    FlutterError.onError = (errorDetails) {
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-    };
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    // Firebase Crashlytics'i sadece desteklenen platformlarda yapılandır
+    if (_crashlyticsSupported) {
+      FlutterError.onError = (errorDetails) {
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      };
+    }
   } catch (e) {
     debugPrint('Firebase başlatılırken hata: $e');
   }
@@ -47,10 +50,6 @@ void main() async {
   // Servisleri başlat
   final dbService = DatabaseService.instance;
   final networkService = NetworkService();
-  final syncService = SyncService(
-    networkService: networkService,
-    databaseService: dbService,
-  );
 
   // Repository'leri başlat
   final healthRepo = RealHealthRepository(); // Real Repository kullanılıyor
@@ -153,7 +152,8 @@ class AnneBebekApp extends StatelessWidget {
 
 // ... (Rest of the file remains the same: AppInitializer, SplashScreen, ErrorScreen)
 class AppInitializer extends StatefulWidget {
-  const AppInitializer({super.key});
+  final bool navigateToSettings;
+  const AppInitializer({super.key, this.navigateToSettings = false});
 
   @override
   State<AppInitializer> createState() => _AppInitializerState();
@@ -194,8 +194,14 @@ class _AppInitializerState extends State<AppInitializer> {
 
       await Future.delayed(const Duration(seconds: 1));
     } catch (e, stackTrace) {
-      // Hataları Firebase Crashlytics'e gönder
-      await FirebaseCrashlytics.instance.recordError(e, stackTrace);
+      // Hataları Crashlytics destekleniyorsa gönder
+      try {
+        if (_crashlyticsSupported) {
+          await FirebaseCrashlytics.instance.recordError(e, stackTrace);
+        }
+      } catch (_) {
+        // ignore crashlytics errors
+      }
       debugPrint('Uygulama başlatılırken hata: $e');
     }
   }
@@ -216,6 +222,11 @@ class _AppInitializerState extends State<AppInitializer> {
         }
 
         if (babyProvider.hasBabyProfile) {
+          if (widget.navigateToSettings) {
+            return const MainBottomNavigation(
+              initialIndex: 4,
+            ); // Assuming settings is the 5th tab
+          }
           return const MainBottomNavigation();
         } else {
           return const WelcomeScreen(showOnboarding: true);
@@ -244,7 +255,7 @@ class SplashScreen extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withAlpha(26),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -268,7 +279,7 @@ class SplashScreen extends StatelessWidget {
             Text(
               'Bebeğinizle birlikte büyüyoruz',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+                color: Theme.of(context).colorScheme.onPrimary.withAlpha(204),
               ),
             ),
             const SizedBox(height: 48),
@@ -330,3 +341,11 @@ class ErrorScreen extends StatelessWidget {
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+// Crashlytics platform desteği kontrolü (Android, iOS, macOS)
+bool get _crashlyticsSupported {
+  if (kIsWeb) return false;
+  return defaultTargetPlatform == TargetPlatform.android ||
+      defaultTargetPlatform == TargetPlatform.iOS ||
+      defaultTargetPlatform == TargetPlatform.macOS;
+}

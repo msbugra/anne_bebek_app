@@ -110,7 +110,7 @@ class _CultureScreenState extends State<CultureScreen>
           margin: const EdgeInsets.only(right: 16),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            color: Theme.of(context).colorScheme.primary.withAlpha(26),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -334,7 +334,7 @@ class _CultureScreenState extends State<CultureScreen>
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withAlpha(13),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -345,7 +345,7 @@ class _CultureScreenState extends State<CultureScreen>
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.1),
+                      color: Colors.blue.withAlpha(26),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(Icons.child_care, color: Colors.blue),

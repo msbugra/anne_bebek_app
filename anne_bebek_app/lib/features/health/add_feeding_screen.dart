@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../shared/providers/health_provider.dart';
 import '../../shared/providers/baby_provider.dart';
+import '../../shared/widgets/custom_switch.dart';
 import '../../shared/models/feeding_tracking_model.dart';
 import '../../shared/models/breastfeeding_tracking_model.dart' as bf;
 
@@ -262,45 +263,21 @@ class _AddFeedingScreenState extends State<AddFeedingScreen>
   }
 
   Widget _buildBreastSideField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Hangi Meme *',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: RadioListTile<bf.BreastSide>(
-                title: const Text('Sol'),
-                value: bf.BreastSide.left,
-                groupValue: _breastSide,
-                onChanged: (value) => setState(() => _breastSide = value!),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-            Expanded(
-              child: RadioListTile<bf.BreastSide>(
-                title: const Text('Sağ'),
-                value: bf.BreastSide.right,
-                groupValue: _breastSide,
-                onChanged: (value) => setState(() => _breastSide = value!),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-            Expanded(
-              child: RadioListTile<bf.BreastSide>(
-                title: const Text('Her İkisi'),
-                value: bf.BreastSide.both,
-                groupValue: _breastSide,
-                onChanged: (value) => setState(() => _breastSide = value!),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-          ],
-        ),
+    return CustomRadioGroup<bf.BreastSide>(
+      title: 'Hangi Meme *',
+      value: _breastSide,
+      direction: Axis.horizontal,
+      onChanged: (value) {
+        if (value != null) {
+          setState(() {
+            _breastSide = value;
+          });
+        }
+      },
+      options: const [
+        RadioOption(value: bf.BreastSide.left, title: 'Sol'),
+        RadioOption(value: bf.BreastSide.right, title: 'Sağ'),
+        RadioOption(value: bf.BreastSide.both, title: 'Her İkisi'),
       ],
     );
   }
@@ -335,71 +312,35 @@ class _AddFeedingScreenState extends State<AddFeedingScreen>
   }
 
   Widget _buildSatisfactionField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Bebek Doydu mu?',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: RadioListTile<bool>(
-                title: const Text('Evet'),
-                value: true,
-                groupValue: _babyWasSatisfied,
-                onChanged: (value) => setState(() => _babyWasSatisfied = value),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-            Expanded(
-              child: RadioListTile<bool>(
-                title: const Text('Hayır'),
-                value: false,
-                groupValue: _babyWasSatisfied,
-                onChanged: (value) => setState(() => _babyWasSatisfied = value),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-          ],
-        ),
+    return CustomRadioGroup<bool?>(
+      title: 'Bebek Doydu mu?',
+      value: _babyWasSatisfied,
+      direction: Axis.horizontal,
+      onChanged: (value) {
+        setState(() {
+          _babyWasSatisfied = value;
+        });
+      },
+      options: const [
+        RadioOption(value: true, title: 'Evet'),
+        RadioOption(value: false, title: 'Hayır'),
       ],
     );
   }
 
   Widget _buildDifficultyField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Zorluk Yaşandı mı?',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: RadioListTile<bool>(
-                title: const Text('Hayır'),
-                value: false,
-                groupValue: _hadDifficulty,
-                onChanged: (value) => setState(() => _hadDifficulty = value),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-            Expanded(
-              child: RadioListTile<bool>(
-                title: const Text('Evet'),
-                value: true,
-                groupValue: _hadDifficulty,
-                onChanged: (value) => setState(() => _hadDifficulty = value),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-          ],
-        ),
+    return CustomRadioGroup<bool?>(
+      title: 'Zorluk Yaşandı mı?',
+      value: _hadDifficulty,
+      direction: Axis.horizontal,
+      onChanged: (value) {
+        setState(() {
+          _hadDifficulty = value;
+        });
+      },
+      options: const [
+        RadioOption(value: false, title: 'Hayır'),
+        RadioOption(value: true, title: 'Evet'),
       ],
     );
   }
@@ -662,7 +603,7 @@ class _AddFeedingScreenState extends State<AddFeedingScreen>
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withAlpha((255 * 0.2).round()),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, -2),
@@ -844,6 +785,7 @@ class _AddFeedingScreenState extends State<AddFeedingScreen>
               ? 'Beslenme kaydı eklendi'
               : 'Beslenme kaydı güncellendi',
         );
+        if (!mounted) return;
         Navigator.pop(context);
       } else {
         _showMessage('Beslenme kaydı kaydedilirken hata oluştu');

@@ -37,7 +37,6 @@ class AdaptiveCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final screenSize = context.screenSize;
 
     // Responsive padding
     final defaultPadding = context.responsivePadding(
@@ -86,14 +85,15 @@ class AdaptiveCard extends StatelessWidget {
           borderRadius: borderRadius ?? defaultBorderRadius,
           child: Padding(
             padding: padding ?? defaultPadding,
-            child: _buildContent(context, screenSize),
+            child: _buildContent(context),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context, ScreenSize screenSize) {
+  Widget _buildContent(BuildContext context) {
+    final screenSize = context.screenSize;
     // For small screens, use vertical layout
     if (screenSize == ScreenSize.small) {
       return Column(
@@ -121,7 +121,7 @@ class AdaptiveCard extends StatelessWidget {
           if (content != null) ...[const SizedBox(height: 12), content!],
           if (actions != null && actions!.isNotEmpty) ...[
             const SizedBox(height: 12),
-            _buildActions(context, screenSize),
+            _buildActions(context),
           ],
         ],
       );
@@ -160,7 +160,7 @@ class AdaptiveCard extends StatelessWidget {
               if (content != null) ...[const SizedBox(height: 12), content!],
               if (actions != null && actions!.isNotEmpty) ...[
                 const SizedBox(height: 12),
-                _buildActions(context, screenSize),
+                _buildActions(context),
               ],
             ],
           ),
@@ -169,8 +169,9 @@ class AdaptiveCard extends StatelessWidget {
     );
   }
 
-  Widget _buildActions(BuildContext context, ScreenSize screenSize) {
+  Widget _buildActions(BuildContext context) {
     if (actions == null || actions!.isEmpty) return const SizedBox.shrink();
+    final screenSize = context.screenSize;
 
     // For small screens, stack actions vertically
     if (screenSize == ScreenSize.small) {
@@ -222,7 +223,6 @@ class AdaptiveListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final screenSize = context.screenSize;
 
     final defaultPadding = context.responsivePadding(
       small: 12.0,
@@ -335,7 +335,6 @@ class _ExpandableAdaptiveCardState extends State<ExpandableAdaptiveCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final screenSize = context.screenSize;
 
     final defaultPadding = context.responsivePadding(
       small: 16.0,

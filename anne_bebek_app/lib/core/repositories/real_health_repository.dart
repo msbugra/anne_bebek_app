@@ -1,3 +1,4 @@
+import 'package:anne_bebek_app/core/constants/vaccination_schedule.dart';
 import 'package:anne_bebek_app/core/repositories/health_repository.dart';
 import 'package:anne_bebek_app/core/services/database_service.dart';
 import 'package:anne_bebek_app/core/utils/error_handler.dart';
@@ -36,7 +37,10 @@ class RealHealthRepository implements HealthRepository {
   }
 
   @override
-  Future<String> addSleepRecord(String babyId, SleepTrackingModel record) async {
+  Future<String> addSleepRecord(
+    String babyId,
+    SleepTrackingModel record,
+  ) async {
     return await ErrorHandler.handleAsyncOperation(() async {
       try {
         final json = record.toJson();
@@ -52,7 +56,10 @@ class RealHealthRepository implements HealthRepository {
   }
 
   @override
-  Future<bool> updateSleepRecord(String babyId, SleepTrackingModel record) async {
+  Future<bool> updateSleepRecord(
+    String babyId,
+    SleepTrackingModel record,
+  ) async {
     return await ErrorHandler.handleAsyncOperation(() async {
       try {
         final json = record.toJson();
@@ -112,7 +119,10 @@ class RealHealthRepository implements HealthRepository {
   }
 
   @override
-  Future<String> addGrowthRecord(String babyId, GrowthTrackingModel record) async {
+  Future<String> addGrowthRecord(
+    String babyId,
+    GrowthTrackingModel record,
+  ) async {
     return await ErrorHandler.handleAsyncOperation(() async {
       try {
         final json = record.toJson();
@@ -128,7 +138,10 @@ class RealHealthRepository implements HealthRepository {
   }
 
   @override
-  Future<bool> updateGrowthRecord(String babyId, GrowthTrackingModel record) async {
+  Future<bool> updateGrowthRecord(
+    String babyId,
+    GrowthTrackingModel record,
+  ) async {
     return await ErrorHandler.handleAsyncOperation(() async {
       try {
         final json = record.toJson();
@@ -188,7 +201,10 @@ class RealHealthRepository implements HealthRepository {
   }
 
   @override
-  Future<String> addFeedingRecord(String babyId, FeedingTrackingModel record) async {
+  Future<String> addFeedingRecord(
+    String babyId,
+    FeedingTrackingModel record,
+  ) async {
     return await ErrorHandler.handleAsyncOperation(() async {
       try {
         final json = record.toJson();
@@ -204,7 +220,10 @@ class RealHealthRepository implements HealthRepository {
   }
 
   @override
-  Future<bool> updateFeedingRecord(String babyId, FeedingTrackingModel record) async {
+  Future<bool> updateFeedingRecord(
+    String babyId,
+    FeedingTrackingModel record,
+  ) async {
     return await ErrorHandler.handleAsyncOperation(() async {
       try {
         final json = record.toJson();
@@ -218,7 +237,9 @@ class RealHealthRepository implements HealthRepository {
       } on DatabaseException {
         rethrow;
       } catch (e) {
-        throw DatabaseException('Beslenme kaydı güncellenirken hata oluştu: $e');
+        throw DatabaseException(
+          'Beslenme kaydı güncellenirken hata oluştu: $e',
+        );
       }
     }, context: 'updateFeedingRecord');
   }
@@ -274,7 +295,10 @@ class RealHealthRepository implements HealthRepository {
       try {
         final json = record.toJson();
         json['baby_id'] = babyId;
-        final id = await _databaseService.insert('breastfeeding_tracking', json);
+        final id = await _databaseService.insert(
+          'breastfeeding_tracking',
+          json,
+        );
         return id.toString();
       } on DatabaseException {
         rethrow;
@@ -352,15 +376,41 @@ class RealHealthRepository implements HealthRepository {
   ) async {
     return await ErrorHandler.handleAsyncOperation(() async {
       try {
-        // This is a simplified implementation
-        // In a real app, this would generate a proper vaccination schedule
-        final records = await _databaseService.query(
+        // Mevcut aşı takvimini temizle
+        await _databaseService.delete(
           'vaccination_tracking',
           where: 'baby_id = ?',
           whereArgs: [babyId],
         );
 
-        return records.map((json) => VaccinationModel.fromJson(json)).toList();
+        final List<VaccinationModel> schedule = [];
+        for (var vaccineInfo in standardVaccinationSchedule) {
+          final scheduledDate = DateTime(
+            birthDate.year,
+            birthDate.month + vaccineInfo.dueMonth,
+            birthDate.day,
+          );
+
+          final intBabyId = int.tryParse(babyId);
+          if (intBabyId == null) {
+            throw DatabaseException('Geçersiz bebek ID formatı: $babyId');
+          }
+
+          final newVaccine = VaccinationModel(
+            babyId: intBabyId,
+            vaccineName: vaccineInfo.name,
+            scheduledDate: scheduledDate,
+            notes: '${vaccineInfo.description} - ${vaccineInfo.details}',
+            status: VaccineStatus.scheduled,
+            createdAt: DateTime.now(),
+          );
+
+          final idString = await addVaccination(babyId, newVaccine);
+          final newId = int.tryParse(idString);
+          schedule.add(newVaccine.copyWith(id: newId));
+        }
+
+        return schedule;
       } on DatabaseException {
         rethrow;
       } catch (e) {
@@ -370,7 +420,10 @@ class RealHealthRepository implements HealthRepository {
   }
 
   @override
-  Future<String> addVaccination(String babyId, VaccinationModel vaccination) async {
+  Future<String> addVaccination(
+    String babyId,
+    VaccinationModel vaccination,
+  ) async {
     return await ErrorHandler.handleAsyncOperation(() async {
       try {
         final json = vaccination.toJson();
@@ -386,7 +439,10 @@ class RealHealthRepository implements HealthRepository {
   }
 
   @override
-  Future<bool> updateVaccination(String babyId, VaccinationModel vaccination) async {
+  Future<bool> updateVaccination(
+    String babyId,
+    VaccinationModel vaccination,
+  ) async {
     return await ErrorHandler.handleAsyncOperation(() async {
       try {
         final json = vaccination.toJson();

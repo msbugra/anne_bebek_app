@@ -6,6 +6,7 @@ import '../../shared/providers/recommendations_provider.dart';
 import '../../core/constants/app_constants.dart';
 import '../../shared/models/daily_recommendation_model.dart';
 import '../../shared/models/weekly_recommendation_model.dart';
+import '../../shared/widgets/custom_switch.dart';
 
 class RecommendationsScreen extends StatefulWidget {
   const RecommendationsScreen({super.key});
@@ -36,6 +37,18 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final babyProvider = Provider.of<BabyProvider>(context, listen: false);
+      if (babyProvider.hasBabyProfile) {
+        final recommendationsProvider = Provider.of<RecommendationsProvider>(
+          context,
+          listen: false,
+        );
+        recommendationsProvider.updateTodayRecommendations(babyProvider);
+        recommendationsProvider.updateThisWeekRecommendations(babyProvider);
+      }
+    });
   }
 
   @override
@@ -176,9 +189,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
                 _selectedCategory = category;
               });
             },
-            selectedColor: Theme.of(
-              context,
-            ).colorScheme.primary.withOpacity(0.1),
+            selectedColor: Theme.of(context).colorScheme.primary.withAlpha(26),
             checkmarkColor: Theme.of(context).colorScheme.primary,
             labelStyle: GoogleFonts.inter(
               fontSize: 12,
@@ -317,7 +328,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(13),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -332,7 +343,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
             decoration: BoxDecoration(
               color: _getCategoryColor(
                 recommendation.category.name,
-              ).withOpacity(0.1),
+              ).withAlpha(26),
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(AppConstants.borderRadius),
               ),
@@ -344,7 +355,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
                   decoration: BoxDecoration(
                     color: _getCategoryColor(
                       recommendation.category.name,
-                    ).withOpacity(0.2),
+                    ).withAlpha(51),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -513,7 +524,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
         borderRadius: BorderRadius.circular(AppConstants.borderRadius),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(13),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -528,7 +539,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
             decoration: BoxDecoration(
               color: _getCategoryColor(
                 recommendation.category.name,
-              ).withOpacity(0.1),
+              ).withAlpha(26),
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(AppConstants.borderRadius),
               ),
@@ -540,7 +551,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
                   decoration: BoxDecoration(
                     color: _getCategoryColor(
                       recommendation.category.name,
-                    ).withOpacity(0.2),
+                    ).withAlpha(51),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -742,21 +753,19 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
           'Kategori Filtresi',
           style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w600),
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: _categories.map((category) {
-            return RadioListTile<String>(
-              title: Text(category, style: GoogleFonts.inter(fontSize: 14)),
-              value: category,
-              groupValue: _selectedCategory,
-              onChanged: (value) {
-                setState(() {
-                  _selectedCategory = value!;
-                });
-                Navigator.pop(context);
-              },
-            );
-          }).toList(),
+        content: CustomRadioGroup<String>(
+          value: _selectedCategory,
+          onChanged: (String? value) {
+            if (value != null) {
+              setState(() {
+                _selectedCategory = value;
+              });
+              Navigator.pop(context);
+            }
+          },
+          options: _categories
+              .map((category) => RadioOption(value: category, title: category))
+              .toList(),
         ),
       ),
     );

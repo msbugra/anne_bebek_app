@@ -111,7 +111,7 @@ class _CompatibilityDetailScreenState extends State<CompatibilityDetailScreen>
             Icon(
               Icons.favorite_border_rounded,
               size: 80,
-              color: Colors.pink.withOpacity(0.5),
+              color: Colors.pink.withAlpha(128),
             ),
             const SizedBox(height: 24),
             Text(
@@ -404,7 +404,7 @@ class _CompatibilityDetailScreenState extends State<CompatibilityDetailScreen>
               color: _getElementCompatibilityColor(
                 motherElement,
                 babyElement,
-              ).withOpacity(0.1),
+              ).withAlpha((255 * 0.1).round()),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -434,7 +434,7 @@ class _CompatibilityDetailScreenState extends State<CompatibilityDetailScreen>
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withAlpha(26),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
@@ -517,7 +517,7 @@ class _CompatibilityDetailScreenState extends State<CompatibilityDetailScreen>
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withAlpha(26),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(icon, color: color, size: 20),
@@ -554,9 +554,9 @@ class _CompatibilityDetailScreenState extends State<CompatibilityDetailScreen>
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.green.withOpacity(0.05),
+        color: Colors.green.withAlpha(13),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.green.withOpacity(0.2)),
+        border: Border.all(color: Colors.green.withAlpha(51)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -600,9 +600,9 @@ class _CompatibilityDetailScreenState extends State<CompatibilityDetailScreen>
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.05),
+        color: Colors.orange.withAlpha(13),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.orange.withOpacity(0.2)),
+        border: Border.all(color: Colors.orange.withAlpha(51)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -33,14 +33,14 @@ class DashboardCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppConstants.borderRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha(13),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
           ],
           border: onTap != null
               ? Border.all(
-                  color: theme.colorScheme.primary.withOpacity(0.1),
+                  color: theme.colorScheme.primary.withAlpha(26),
                   width: 1,
                 )
               : null,
@@ -56,8 +56,9 @@ class DashboardCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: (iconColor ?? theme.colorScheme.primary)
-                          .withOpacity(0.1),
+                      color: (iconColor ?? theme.colorScheme.primary).withAlpha(
+                        26,
+                      ),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
@@ -136,14 +137,14 @@ class CompactDashboardCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppConstants.borderRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha(13),
               blurRadius: 4,
               offset: const Offset(0, 1),
             ),
           ],
           border: onTap != null
               ? Border.all(
-                  color: theme.colorScheme.primary.withOpacity(0.1),
+                  color: theme.colorScheme.primary.withAlpha(26),
                   width: 1,
                 )
               : null,
@@ -153,9 +154,7 @@ class CompactDashboardCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: (iconColor ?? theme.colorScheme.primary).withOpacity(
-                  0.1,
-                ),
+                color: (iconColor ?? theme.colorScheme.primary).withAlpha(26),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Icon(

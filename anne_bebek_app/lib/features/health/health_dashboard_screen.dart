@@ -302,7 +302,7 @@ class _HealthDashboardScreenState extends State<HealthDashboardScreen>
         Expanded(
           child: LinearProgressIndicator(
             value: double.parse(percentile) / 100,
-            backgroundColor: color.withOpacity(0.1),
+            backgroundColor: color.withAlpha((255 * 0.1).round()),
             valueColor: AlwaysStoppedAnimation(color),
           ),
         ),
@@ -457,16 +457,16 @@ class _HealthDashboardScreenState extends State<HealthDashboardScreen>
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: completed
-            ? Colors.green.withOpacity(0.05)
+            ? Colors.green.withAlpha((255 * 0.05).round())
             : isUrgent
-            ? Colors.red.withOpacity(0.05)
+            ? Colors.red.withAlpha((255 * 0.05).round())
             : const Color(0xFFF8F9FA),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: completed
-              ? Colors.green.withOpacity(0.2)
+              ? Colors.green.withAlpha((255 * 0.2).round())
               : isUrgent
-              ? Colors.red.withOpacity(0.2)
+              ? Colors.red.withAlpha((255 * 0.2).round())
               : Colors.transparent,
           width: 1,
         ),
@@ -532,12 +532,16 @@ class _HealthDashboardScreenState extends State<HealthDashboardScreen>
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: current
-            ? Theme.of(context).colorScheme.primary.withOpacity(0.05)
+            ? Theme.of(
+                context,
+              ).colorScheme.primary.withAlpha((255 * 0.05).round())
             : const Color(0xFFF8F9FA),
         borderRadius: BorderRadius.circular(8),
         border: current
             ? Border.all(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withAlpha((255 * 0.2).round()),
               )
             : null,
       ),
@@ -664,9 +668,9 @@ class _HealthDashboardScreenState extends State<HealthDashboardScreen>
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.05),
+        color: color.withAlpha((255 * 0.05).round()),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withAlpha((255 * 0.2).round())),
       ),
       child: Row(
         children: [
@@ -764,9 +768,9 @@ class _HealthDashboardScreenState extends State<HealthDashboardScreen>
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withAlpha((255 * 0.1).round()),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withOpacity(0.2)),
+          border: Border.all(color: color.withAlpha((255 * 0.2).round())),
         ),
         child: Column(
           children: [
@@ -862,7 +866,7 @@ class _HealthDashboardScreenState extends State<HealthDashboardScreen>
         },
         style: TextButton.styleFrom(
           padding: const EdgeInsets.all(16),
-          backgroundColor: color.withOpacity(0.1),
+          backgroundColor: color.withAlpha((255 * 0.1).round()),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

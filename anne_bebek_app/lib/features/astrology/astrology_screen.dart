@@ -137,7 +137,9 @@ class _AstrologyScreenState extends State<AstrologyScreen>
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withAlpha((255 * 0.1).round()),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -228,7 +230,6 @@ class _AstrologyScreenState extends State<AstrologyScreen>
     AstrologyProvider astrologyProvider,
   ) {
     final compatibility = astrologyProvider.currentCompatibility;
-    final baby = babyProvider.currentBaby!;
     final mother = babyProvider.currentMother;
 
     return SingleChildScrollView(
@@ -264,7 +265,6 @@ class _AstrologyScreenState extends State<AstrologyScreen>
     BabyProvider babyProvider,
     AstrologyProvider astrologyProvider,
   ) {
-    final baby = babyProvider.currentBaby!;
     final characteristics = astrologyProvider.babyCharacteristics;
     final ageInMonths = babyProvider.babyAgeInMonths ?? 0;
 
@@ -313,9 +313,7 @@ class _AstrologyScreenState extends State<AstrologyScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AstrologyProvider.getZodiacColor(
-              zodiacSign,
-            ).withOpacity(0.3),
+            color: AstrologyProvider.getZodiacColor(zodiacSign).withAlpha(77),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -329,7 +327,7 @@ class _AstrologyScreenState extends State<AstrologyScreen>
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withAlpha(51),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Center(
@@ -356,7 +354,7 @@ class _AstrologyScreenState extends State<AstrologyScreen>
                       ZodiacCalculator.getZodiacDateRange(zodiacSign),
                       style: GoogleFonts.inter(
                         fontSize: 14,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withAlpha(204),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -366,7 +364,7 @@ class _AstrologyScreenState extends State<AstrologyScreen>
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withAlpha(51),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -391,7 +389,7 @@ class _AstrologyScreenState extends State<AstrologyScreen>
               characteristics.generalDescription,
               style: GoogleFonts.inter(
                 fontSize: 14,
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withAlpha(230),
                 height: 1.6,
               ),
               textAlign: TextAlign.center,
@@ -418,7 +416,7 @@ class _AstrologyScreenState extends State<AstrologyScreen>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withAlpha(13),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
@@ -462,7 +460,7 @@ class _AstrologyScreenState extends State<AstrologyScreen>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withAlpha(13),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
@@ -609,7 +607,7 @@ class _AstrologyScreenState extends State<AstrologyScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFFF6B6B).withOpacity(0.3),
+            color: const Color(0xFFFF6B6B).withAlpha(77),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -631,7 +629,7 @@ class _AstrologyScreenState extends State<AstrologyScreen>
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withAlpha(51),
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -650,14 +648,14 @@ class _AstrologyScreenState extends State<AstrologyScreen>
             '/10',
             style: GoogleFonts.inter(
               fontSize: 16,
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withAlpha(204),
             ),
           ),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withAlpha(51),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -674,7 +672,7 @@ class _AstrologyScreenState extends State<AstrologyScreen>
             compatibility.compatibilityDescription,
             style: GoogleFonts.inter(
               fontSize: 14,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withAlpha(230),
               height: 1.6,
             ),
             textAlign: TextAlign.center,
@@ -749,9 +747,9 @@ class _AstrologyScreenState extends State<AstrologyScreen>
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.05),
+        color: color.withAlpha(13),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withAlpha(51)),
       ),
       child: Text(
         tip,
@@ -773,7 +771,7 @@ class _AstrologyScreenState extends State<AstrologyScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(13),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -784,7 +782,7 @@ class _AstrologyScreenState extends State<AstrologyScreen>
           Icon(
             Icons.favorite_border_rounded,
             size: 60,
-            color: Colors.pink.withOpacity(0.5),
+            color: Colors.pink.withAlpha(128),
           ),
           const SizedBox(height: 16),
           Text(

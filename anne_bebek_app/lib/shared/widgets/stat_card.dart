@@ -35,13 +35,13 @@ class StatCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppConstants.borderRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha(13),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
           ],
           border: onTap != null
-              ? Border.all(color: color.withOpacity(0.2), width: 1)
+              ? Border.all(color: color.withAlpha(51), width: 1)
               : null,
         ),
         child: Column(
@@ -53,7 +53,7 @@ class StatCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withAlpha(26),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(icon, color: color, size: 18),
@@ -131,7 +131,7 @@ class StatCard extends StatelessWidget {
                 width: double.infinity,
                 height: 2,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
+                  color: color.withAlpha(51),
                   borderRadius: BorderRadius.circular(1),
                 ),
               ),
@@ -200,13 +200,13 @@ class LargeStatCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppConstants.borderRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha(13),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
           ],
           border: onTap != null
-              ? Border.all(color: color.withOpacity(0.2), width: 1)
+              ? Border.all(color: color.withAlpha(51), width: 1)
               : null,
         ),
         child: Column(
@@ -218,7 +218,7 @@ class LargeStatCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withAlpha(26),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(icon, color: color, size: 24),
@@ -318,9 +318,9 @@ class MiniStatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.05),
+        color: color.withAlpha(13),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.1), width: 1),
+        border: Border.all(color: color.withAlpha(26), width: 1),
       ),
       child: Row(
         children: [

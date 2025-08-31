@@ -10,11 +10,10 @@ DailyRecommendationSimple _$DailyRecommendationSimpleFromJson(
   Map<String, dynamic> json,
 ) => DailyRecommendationSimple(
   id: (json['id'] as num?)?.toInt(),
-  babyId: (json['babyId'] as num).toInt(),
   title: json['title'] as String,
-  content: json['content'] as String,
-  category: json['category'] as String?,
-  isFavorite: json['isFavorite'] as bool? ?? false,
+  description: json['description'] as String,
+  category: json['category'] as String,
+  dayNumber: (json['dayNumber'] as num).toInt(),
   createdAt: DateTime.parse(json['createdAt'] as String),
 );
 
@@ -22,10 +21,9 @@ Map<String, dynamic> _$DailyRecommendationSimpleToJson(
   DailyRecommendationSimple instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'babyId': instance.babyId,
   'title': instance.title,
-  'content': instance.content,
+  'description': instance.description,
   'category': instance.category,
-  'isFavorite': instance.isFavorite,
+  'dayNumber': instance.dayNumber,
   'createdAt': instance.createdAt.toIso8601String(),
 };

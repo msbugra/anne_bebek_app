@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../enums/sort_option.dart';
 import '../models/cultural_tradition_model.dart';
 import '../../core/services/database_service.dart';
 
@@ -23,6 +24,7 @@ class CultureProvider with ChangeNotifier {
   TraditionCategory? _selectedCategory;
   AgeRange? _selectedAgeRange;
   String _searchQuery = '';
+  SortOption _sortOption = SortOption.none;
 
   // Getters
   List<CulturalTraditionModel> get allTraditions => _allTraditions;
@@ -40,6 +42,7 @@ class CultureProvider with ChangeNotifier {
   TraditionCategory? get selectedCategory => _selectedCategory;
   AgeRange? get selectedAgeRange => _selectedAgeRange;
   String get searchQuery => _searchQuery;
+  SortOption get sortOption => _sortOption;
 
   bool get hasActiveFilters =>
       _selectedOrigin != null ||
@@ -222,6 +225,13 @@ class CultureProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Sort traditions
+  void sortTraditions(SortOption option) {
+    _sortOption = option;
+    _applyFilters();
+    notifyListeners();
+  }
+
   // Apply current filters
   void _applyFilters() {
     List<CulturalTraditionModel> filtered = List.from(_allTraditions);
@@ -256,6 +266,28 @@ class CultureProvider with ChangeNotifier {
         filtered,
         _selectedAgeRange!,
       );
+    }
+
+    // Sorting
+    switch (_sortOption) {
+      case SortOption.alphabeticalAZ:
+        filtered.sort((a, b) => a.title.compareTo(b.title));
+        break;
+      case SortOption.alphabeticalZA:
+        filtered.sort((a, b) => b.title.compareTo(a.title));
+        break;
+      case SortOption.byCategory:
+        filtered.sort((a, b) => a.category.index.compareTo(b.category.index));
+        break;
+      case SortOption.byAgeRange:
+        filtered.sort((a, b) => a.ageRange.index.compareTo(b.ageRange.index));
+        break;
+      case SortOption.byOrigin:
+        filtered.sort((a, b) => a.origin.index.compareTo(b.origin.index));
+        break;
+      case SortOption.none:
+        // No sorting
+        break;
     }
 
     _filteredTraditions = filtered;
